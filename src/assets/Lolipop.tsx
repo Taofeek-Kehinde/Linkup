@@ -132,7 +132,7 @@ const Lollipop: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: '#f5f7fb',
       padding: 'clamp(20px, 5vh, 40px) 20px',
       fontFamily: 'system-ui, sans-serif'
     }}>
@@ -141,25 +141,7 @@ const Lollipop: React.FC = () => {
         margin: '0 auto',
         animation: 'fadeIn 0.6s ease-out'
       }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <h1 style={{
-            color: 'white',
-            fontSize: 'clamp(32px, 6vw, 48px)',
-            fontWeight: '700',
-            marginBottom: '10px',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
-          }}>
-            🍭 LINK UP
-          </h1>
-          <p style={{
-            color: 'rgba(255,255,255,0.9)',
-            fontSize: 'clamp(14px, 3vw, 18px)',
-            fontStyle: 'italic'
-          }}>
-            {eventName}
-          </p>
-        </div>
+       
 
         {/* Single Column Layout - Choice Selection Only */}
         <div style={{
@@ -169,15 +151,7 @@ const Lollipop: React.FC = () => {
           boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
           animation: 'slideUp 0.5s ease-out'
         }}>
-          <h2 style={{
-            color: '#1e4fa3',
-            fontSize: 'clamp(20px, 4vw, 24px)',
-            marginBottom: '30px',
-            textAlign: 'center',
-            fontWeight: '600'
-          }}>
-            What's your vibe?
-          </h2>
+          
 
           {/* Choice Options - No Icons, No Text */}
           <div style={{
@@ -186,40 +160,7 @@ const Lollipop: React.FC = () => {
             gap: '20px',
             marginBottom: '35px'
           }}>
-            {/* Lollipop Option - Yellow Background */}
-            <div
-              onClick={() => setSelectedChoice('lollipop')}
-              style={{
-                background: selectedChoice === 'lollipop' 
-                  ? '#FFD700' 
-                  : '#FFF3CD',
-                borderRadius: '20px',
-                padding: '50px 15px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                border: selectedChoice === 'lollipop' ? '3px solid #FFA500' : '2px solid #FFE082',
-                transform: selectedChoice === 'lollipop' ? 'scale(1.02)' : 'scale(1)',
-                boxShadow: selectedChoice === 'lollipop' ? '0 10px 20px rgba(255,215,0,0.3)' : 'none'
-              }}
-              onMouseEnter={(e) => {
-                if (selectedChoice !== 'lollipop') {
-                  e.currentTarget.style.background = '#FFE082';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selectedChoice !== 'lollipop') {
-                  e.currentTarget.style.background = '#FFF3CD';
-                }
-              }}
-            >
-              <div style={{
-                fontSize: 'clamp(50px, 10vw, 80px)',
-                marginBottom: '10px'
-              }}>
-                🍭
-              </div>
-            </div>
+            
 
             {/* Chocolate Option - Deep Brown Background */}
             <div
@@ -255,6 +196,43 @@ const Lollipop: React.FC = () => {
                 🍫
               </div>
             </div>
+
+
+            {/* Lollipop Option - Yellow Background */}
+            <div
+              onClick={() => setSelectedChoice('lollipop')}
+              style={{
+                background: selectedChoice === 'lollipop' 
+                  ? '#FFD700' 
+                  : '#FFF3CD',
+                borderRadius: '20px',
+                padding: '50px 15px',
+                textAlign: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                border: selectedChoice === 'lollipop' ? '3px solid #FFA500' : '2px solid #FFE082',
+                transform: selectedChoice === 'lollipop' ? 'scale(1.02)' : 'scale(1)',
+                boxShadow: selectedChoice === 'lollipop' ? '0 10px 20px rgba(255,215,0,0.3)' : 'none'
+              }}
+              onMouseEnter={(e) => {
+                if (selectedChoice !== 'lollipop') {
+                  e.currentTarget.style.background = '#FFE082';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selectedChoice !== 'lollipop') {
+                  e.currentTarget.style.background = '#FFF3CD';
+                }
+              }}
+            >
+              <div style={{
+                fontSize: 'clamp(50px, 10vw, 80px)',
+                marginBottom: '10px'
+              }}>
+                🍭
+              </div>
+            </div>
+            
           </div>
 
           {/* Location Dropdown */}
