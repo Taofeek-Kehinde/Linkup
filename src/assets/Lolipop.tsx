@@ -153,7 +153,7 @@ const Lollipop: React.FC = () => {
             🍭 LINK UP
           </h1>
           <p style={{
-            color: 'rgba(255,255,255,0.9)',
+            color: 'black',
             fontSize: 'clamp(14px, 3vw, 18px)',
             fontStyle: 'italic'
           }}>
@@ -163,10 +163,10 @@ const Lollipop: React.FC = () => {
 
         {/* Single Column Layout - Choice Selection Only */}
         <div style={{
-          background: 'white',
-          borderRadius: '24px',
-          padding: 'clamp(25px, 4vw, 35px)',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+          // background: 'white',
+          // borderRadius: '24px',
+          // padding: 'clamp(25px, 4vw, 35px)',
+          // boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
           animation: 'slideUp 0.5s ease-out'
         }}>
           <h2 style={{
