@@ -142,6 +142,25 @@ const Lollipop: React.FC = () => {
         animation: 'fadeIn 0.6s ease-out'
       }}>
 
+   {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <h1 style={{
+            color: 'black',
+            fontSize: '22px',
+            fontWeight: '700',
+            marginBottom: '10px',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
+          }}>
+            🍭 LINK UP
+          </h1>
+          {/* <p style={{
+            color: 'rgba(255,255,255,0.9)',
+            fontSize: '20px',
+            fontStyle: 'italic'
+          }}>
+            {eventName}
+          </p> */}
+        </div>
 
         {/* Single Column Layout - Choice Selection Only */}
         <div style={{
