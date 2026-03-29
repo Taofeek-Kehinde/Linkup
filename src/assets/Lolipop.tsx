@@ -179,76 +179,83 @@ const Lollipop: React.FC = () => {
             What's your vibe?
           </h2> */}
 
-          {/* Choice Options - No Icons, No Text */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '30px',
-            marginBottom: '35px'
-          }}>
-            {/* Chocolate Option */}
-            <div
-              onClick={() => setSelectedChoice('chocolate')}
-              style={{
-                background: '#3E2723',
-                borderRadius: '50%',
-                width: 'clamp(140px, 25vw, 160px)',
-                height: 'clamp(140px, 25vw, 160px)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                border: selectedChoice === 'chocolate' ? '4px solid #795548' : '2px solid transparent',
-                transform: selectedChoice === 'chocolate' ? 'scale(1.08)' : 'scale(1)',
-                boxShadow: selectedChoice === 'chocolate' ? '0 10px 25px rgba(62,39,35,0.4)' : '0 6px 15px rgba(0,0,0,0.08)'
-              }}
-            >
-              <div style={{ fontSize: 'clamp(50px, 10vw, 70px)' }}>🍫</div>
-            </div>
+<div
+  style={{
+    display: 'flex',
+    justifyContent: 'center', // center horizontally
+    alignItems: 'center',     // center vertically
+    gap: '20px',              // space between candies and OR
+    marginBottom: '35px'
+  }}
+>
+  {/* Chocolate Option - Deep Brown Background */}
+  <div
+    onClick={() => setSelectedChoice('chocolate')}
+    style={{
+      background: '#3E2723',
+      borderRadius: '50%',
+      width: 'clamp(140px, 28vw, 180px)',
+      height: 'clamp(140px, 28vw, 180px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      border: selectedChoice === 'chocolate' ? '4px solid #795548' : '2px solid transparent',
+      transform: selectedChoice === 'chocolate' ? 'scale(1.08)' : 'scale(1)',
+      boxShadow: selectedChoice === 'chocolate'
+        ? '0 10px 25px rgba(62,39,35,0.4)'
+        : '0 6px 15px rgba(0,0,0,0.08)'
+    }}
+  >
+    <div style={{ fontSize: 'clamp(50px, 10vw, 80px)' }}>🍫</div>
+  </div>
 
-            {/* OR Circle - Centered */}
-            <div style={{
-              width: 'clamp(50px, 8vw, 60px)',
-              height: 'clamp(50px, 8vw, 60px)',
-              borderRadius: '50%',
-              textShadow: '0 1px 2px rgba(0,0,0,0.4)',
-              background: 'linear-gradient(45deg, #3E2723 50%, #FFD700 50%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 700,
-              fontSize: 'clamp(12px, 2.5vw, 16px)',
-              color: 'white',
-              boxShadow: '0 6px 18px rgba(0,0,0,0.15)',
-              letterSpacing: '1px',
-              flexShrink: 0
-            }}>
-              OR
-            </div>
+  {/* OR Circle */}
+  <div
+    style={{
+      width: 'clamp(40px, 12vw, 60px)',
+      height: 'clamp(40px, 12vw, 60px)',
+      borderRadius: '50%',
+      textShadow: '0 1px 2px rgba(0,0,0,0.4)',
+      background: 'linear-gradient(to right, #FFD700 50%, #3E2723 50%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 700,
+      fontSize: 'clamp(14px, 3vw, 18px)',
+      color: 'white',
+      boxShadow: '0 6px 18px rgba(0,0,0,0.15)',
+      letterSpacing: '1px'
+    }}
+  >
+    OR
+  </div>
 
-            {/* Lollipop Option */}
-            <div
-              onClick={() => setSelectedChoice('lollipop')}
-              style={{
-                background: '#FFD700',
-                borderRadius: '50%',
-                width: 'clamp(140px, 25vw, 160px)',
-                height: 'clamp(140px, 25vw, 160px)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                border: selectedChoice === 'lollipop' ? '4px solid #FF8F00' : '2px solid transparent',
-                transform: selectedChoice === 'lollipop' ? 'scale(1.08)' : 'scale(1)',
-                boxShadow: selectedChoice === 'lollipop' ? '0 10px 25px rgba(255,193,7,0.4)' : '0 6px 15px rgba(0,0,0,0.08)'
-              }}
-            >
-              <div style={{ fontSize: 'clamp(50px, 10vw, 70px)' }}>🍭</div>
-            </div>
-          </div>
+  {/* Lollipop Option - Yellow Background */}
+  <div
+    onClick={() => setSelectedChoice('lollipop')}
+    style={{
+      background: '#FFD700',
+      borderRadius: '50%',
+      width: 'clamp(140px, 28vw, 180px)',
+      height: 'clamp(140px, 28vw, 180px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      border: selectedChoice === 'lollipop' ? '4px solid #FF8F00' : '2px solid transparent',
+      transform: selectedChoice === 'lollipop' ? 'scale(1.08)' : 'scale(1)',
+      boxShadow: selectedChoice === 'lollipop'
+        ? '0 10px 25px rgba(255,193,7,0.4)'
+        : '0 6px 15px rgba(0,0,0,0.08)'
+    }}
+  >
+    <div style={{ fontSize: 'clamp(50px, 10vw, 80px)' }}>🍭</div>
+  </div>
+</div>
+           
 
           {/* Location Dropdown */}
           <div style={{ marginBottom: '30px' }}>
