@@ -188,7 +188,10 @@ const Lollipop: React.FC = () => {
     marginBottom: '35px'
   }}
 >
-  {/* Chocolate Option - Deep Brown Background */}
+  {/** Define a single size variable for all circles **/}
+  {/** Example: clamp(min 140px, 25vw, max 180px) **/}
+  {/** This will make sure all circles are perfectly round and same size **/}
+  {/** Chocolate */}
   <div
     onClick={() => setSelectedChoice('chocolate')}
     style={{
@@ -211,19 +214,19 @@ const Lollipop: React.FC = () => {
     <div style={{ fontSize: 'clamp(50px, 10vw, 80px)' }}>🍫</div>
   </div>
 
-  {/* OR Circle */}
+  {/** OR Circle */}
   <div
     style={{
-      width: 'clamp(40px, 12vw, 60px)',
-      height: 'clamp(40px, 12vw, 60px)',
+      width: 'clamp(140px, 28vw, 180px)',   // same as candies
+      height: 'clamp(140px, 28vw, 180px)',  // same as candies
       borderRadius: '50%',
       textShadow: '0 1px 2px rgba(0,0,0,0.4)',
-      background: 'linear-gradient(to right, #FFD700 50%, #3E2723 50%)',
+      background: 'linear-gradient(to right, #3E2723 50%, #FFD700 50%)', // left = chocolate, right = lollipop
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       fontWeight: 700,
-      fontSize: 'clamp(14px, 3vw, 18px)',
+      fontSize: 'clamp(16px, 4vw, 20px)',
       color: 'white',
       boxShadow: '0 6px 18px rgba(0,0,0,0.15)',
       letterSpacing: '1px'
@@ -232,7 +235,7 @@ const Lollipop: React.FC = () => {
     OR
   </div>
 
-  {/* Lollipop Option - Yellow Background */}
+  {/** Lollipop */}
   <div
     onClick={() => setSelectedChoice('lollipop')}
     style={{
