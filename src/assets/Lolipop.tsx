@@ -145,10 +145,7 @@ const Lollipop: React.FC = () => {
 
         {/* Single Column Layout - Choice Selection Only */}
         <div style={{
-          // background: 'white',
-          // borderRadius: '24px',
-          // padding: 'clamp(25px, 4vw, 35px)',
-          // boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+         
           animation: 'slideUp 0.5s ease-out'
         }}>
 
@@ -156,8 +153,8 @@ const Lollipop: React.FC = () => {
           {/* Choice Options - No Icons, No Text */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '20px',
+            gridTemplateColumns: '1fr auto 1fr',
+            gap: '10px',
             marginBottom: '35px'
           }}>
 
@@ -195,8 +192,27 @@ const Lollipop: React.FC = () => {
   <div style={{ fontSize: 'clamp(50px, 10vw, 80px)' }}>
     🍫
   </div>
-</div>
+  </div>
 
+          {/* OR Separator - Gradient Circle */}
+          <div
+            style={{
+              background: 'linear-gradient(90deg, #FFD700 0%, #3E2723 50%, #FFD700 100%)',
+              borderRadius: '50%',
+              width: 'clamp(80px, 16vw, 110px)',
+              height: 'clamp(80px, 16vw, 110px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 'clamp(16px, 3.5vw, 24px)',
+              fontWeight: 'bold',
+              color: 'white',
+              textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+              boxShadow: '0 6px 15px rgba(0,0,0,0.1)'
+            }}
+          >
+            OR
+          </div>
 
             {/* Lollipop Option - Yellow Background */}
            <div

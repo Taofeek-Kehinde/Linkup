@@ -1,13 +1,14 @@
-## TODO: Fix QR Scan -> Picture Redirect
+# Task Progress: Add OR between candies in Lollipop selection
 
-### Plan Steps:
-- [x] 1. Create TODO.md 
-- [x] 2. Initial auto-redirect for root /
-- [x] 3. Update DateQr.tsx: Auto-redirect /date-qr/:eventId -> /picture/:eventId 
-- [ ] 4. Test: admin create -> /date-qr/{id} or root -> Picture
-- [ ] 5. Test generated QR (/picture/{id}) -> Picture upload
-- [ ] 6. `npm run dev` local test
-- [ ] 7. Deploy Vercel
-- [ ] 8. Complete
+**Approved Plan:**
+- Update src/assets/Lolipop.tsx: Modify grid to 3 columns, add gradient OR circle in middle
+- No other file changes
 
-Current: Reverted DateQr: Admin Generate QR -> /date-qr/{id} shows QR page. Root / scan -> Picture via session. /picture/{id} QR -> Picture direct. Ready for test/deploy.
+**Steps:**
+- [x] 1. Create TODO.md with steps
+- [x] 2. Edit src/assets/Lolipop.tsx with exact changes
+- [x] 3. Verify no layout breakage (candies same size/position)
+- [x] 4. Test in dev server
+- [ ] 5. Complete task
+
+✅ Task complete: OR added between candies in src/assets/Lolipop.tsx
