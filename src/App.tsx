@@ -1,7 +1,50 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
-import DateQr from "./assets/DateQr";
+import DateQr from "./assets/DateQr.tsx";
+import Picture from "./assets/Picture.tsx";
+import Lollipop from "./assets/Lolipop.tsx";
+import Gallery from "./assets/Gallery.tsx";
+import Chat from "./assets/Chat.tsx";
 import { AdminLock, LinkupGenerator } from "./admin-lock/admin";
+
+const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* DateQr page - displays QR code for scanning */}
+        <Route path="/" element={<DateQr />} />
+        
+        {/* Picture page - take photo with front camera */}
+        <Route path="/picture/:eventId" element={<Picture />} />
+        
+        {/* Lollipop page - choose chocolate/lollipop and location */}
+        <Route path="/lollipop/:eventId" element={<Lollipop />} />
+        
+        {/* Gallery page - view all participants and chat */}
+        <Route path="/gallery/:eventId" element={<Gallery />} />
+        
+        {/* Chat page - 1-on-1 messaging with timer */}
+        <Route path="/chat/:eventId/:participantId" element={<Chat />} />
+        
+        {/* Admin page with encryption lock */}
+        <Route 
+          path="/admin" 
+          element={
+            <AdminLock>
+              <LinkupGenerator />
+            </AdminLock>
+          } 
+        />
+        
+        {/* Dynamic route for event details when QR code is scanned */}
+        <Route path="/event-details/:eventId" element={<EventDetails />} />
+        
+        {/* Redirect any unknown routes to DateQr */}
+        <Route path="*" element={<DateQr />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 // EventDetails component for displaying event information when QR is scanned
 const EventDetails: React.FC = () => {
@@ -195,33 +238,6 @@ const EventDetails: React.FC = () => {
         }
       `}</style>
     </div>
-  );
-};
-
-const App: React.FC = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        {/* DateQr page - displays QR code for scanning */}
-        <Route path="/" element={<DateQr />} />
-        
-        {/* Admin page with encryption lock */}
-        <Route 
-          path="/admin" 
-          element={
-            <AdminLock>
-              <LinkupGenerator />
-            </AdminLock>
-          } 
-        />
-        
-        {/* Dynamic route for event details when QR code is scanned */}
-        <Route path="/event-details/:eventId" element={<EventDetails />} />
-        
-        {/* Redirect any unknown routes to DateQr */}
-        <Route path="*" element={<DateQr />} />
-      </Routes>
-    </BrowserRouter>
   );
 };
 

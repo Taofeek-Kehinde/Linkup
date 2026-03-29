@@ -5,7 +5,6 @@ import { doc, getDoc } from 'firebase/firestore';
 import { FaArrowLeft, FaCalendarAlt, FaMapMarkerAlt, FaShareAlt, FaDownload } from 'react-icons/fa';
 // import { IoMusicalNotes } from 'react-icons/io5';
 
-// Extend Window interface to include QRCode
 declare global {
   interface Window {
     QRCode: any;
@@ -21,15 +20,14 @@ const DateQr: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
 
-  // Build the redirect URL - this will point to a page where users can see event details
+  // Get the correct URL for Vercel deployment
   const getRedirectUrl = () => {
-    // In production, replace with your actual domain
+    // Use the current origin (works on Vercel, localhost, etc.)
     const baseUrl = window.location.origin;
-    return `${baseUrl}/event-details/${eventId}`;
+    return `${baseUrl}/picture/${eventId}`;
   };
 
   useEffect(() => {
-    // Fetch event data from Firebase
     const fetchEventData = async () => {
       if (!eventId) {
         setError("No event ID found");
@@ -45,7 +43,6 @@ const DateQr: React.FC = () => {
           setEventName(data.eventName || "LINK UP Event");
           setLocations(data.locations || []);
         } else {
-          // Try to get from sessionStorage as fallback
           const savedName = sessionStorage.getItem('currentEventName');
           const savedLocations = sessionStorage.getItem('currentEventLocations');
           
@@ -55,7 +52,6 @@ const DateQr: React.FC = () => {
         }
       } catch (err) {
         console.error("Error fetching event:", err);
-        // Fallback to sessionStorage
         const savedName = sessionStorage.getItem('currentEventName');
         const savedLocations = sessionStorage.getItem('currentEventLocations');
         
@@ -73,15 +69,12 @@ const DateQr: React.FC = () => {
   useEffect(() => {
     if (loading) return;
 
-    // Dynamically load the QRCode library
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
     script.async = true;
     script.onload = () => {
       if (window.QRCode && qrCodeRef.current) {
-        // Clear any existing QR code
         qrCodeRef.current.innerHTML = '';
-        // Generate new QR code with event details URL
         new window.QRCode(qrCodeRef.current, {
           text: getRedirectUrl(),
           width: 180,
@@ -95,7 +88,6 @@ const DateQr: React.FC = () => {
     document.head.appendChild(script);
 
     return () => {
-      // Cleanup
       if (qrCodeRef.current) {
         qrCodeRef.current.innerHTML = '';
       }
@@ -169,9 +161,8 @@ const DateQr: React.FC = () => {
         maxWidth: '480px',
         animation: 'fadeIn 1s ease-in-out'
       }}>
-        {/* Back Button */}
         <button
-          onClick={() => navigate('/admin-lock')}
+          onClick={() => navigate('/admin')}
           style={{
             position: 'absolute',
             top: '20px',
@@ -209,7 +200,6 @@ const DateQr: React.FC = () => {
           in the moment
         </p>
 
-        {/* Event Details */}
         <div style={{
           background: 'white',
           borderRadius: '20px',
@@ -243,7 +233,6 @@ const DateQr: React.FC = () => {
           </div>
         </div>
 
-        {/* QR Code Container */}
         <div style={{
           background: 'white',
           width: 'clamp(220px, 65vw, 300px)',
@@ -280,7 +269,6 @@ const DateQr: React.FC = () => {
           (Scan to linkup)
         </p>
 
-        {/* Action Buttons */}
         <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
           <button
             onClick={handleShare}
