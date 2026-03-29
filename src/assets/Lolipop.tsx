@@ -226,8 +226,8 @@ const Lollipop: React.FC = () => {
 {/* OR Circle */}
 <div
   style={{
-    width: 'clamp(60px, 12vw, 90px)',
-    height: 'clamp(60px, 12vw, 90px)',
+    width: 'clamp(30px, 12vw, 40px)',
+    height: 'clamp(30px, 12vw, 40px)',
     borderRadius: '50%',
      textShadow: '0 1px 2px rgba(0,0,0,0.4)',
     background: 'linear-gradient(to right, #3E2723 50%, #FFD700 50%)',
