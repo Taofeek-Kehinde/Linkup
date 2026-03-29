@@ -14,6 +14,9 @@ const App: React.FC = () => {
         {/* DateQr page - displays QR code for scanning */}
         <Route path="/" element={<DateQr />} />
         
+        {/* IMPORTANT: Add this route for QR code scanning */}
+        <Route path="/date-qr/:eventId" element={<DateQr />} />
+        
         {/* Picture page - take photo with front camera */}
         <Route path="/picture/:eventId" element={<Picture />} />
         
@@ -62,7 +65,6 @@ const EventDetails: React.FC = () => {
       }
 
       try {
-        // Dynamically import firebase to avoid issues if not needed
         const { db } = await import("./firebase");
         const { doc, getDoc } = await import("firebase/firestore");
         
