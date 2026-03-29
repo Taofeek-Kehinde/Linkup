@@ -218,7 +218,7 @@ const Lollipop: React.FC = () => {
             style={{
               position: 'relative',
               top: '15px',
-              background: 'linear-gradient(90deg, #FFD700 0%, #3E2723 50%, #FFD700 100%)',
+              background: 'linear-gradient(to right, #3E2723 50%, #FFD700 50%)',
               borderRadius: '50%',
               width: 'clamp(60px, 12vw, 90px)',
               height: 'clamp(60px, 12vw, 90px)',
