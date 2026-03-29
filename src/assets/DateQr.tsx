@@ -29,13 +29,15 @@ const DateQr: React.FC = () => {
     return `${baseUrl}/picture/${id}`;
   };
 
-  // Auto-redirect to Picture ANY time eventId is present (QR scan intent)
+  // Auto-redirect root / to Picture if session eventId (QR scan), but show QR page for admin navigation
   useEffect(() => {
-    if (eventId) {
-      navigate(`/picture/${eventId}`);
-      return;
+    if (!eventId) {
+      const sessionId = sessionStorage.getItem('currentEventId');
+      if (sessionId) {
+        navigate(`/picture/${sessionId}`);
+      }
     }
-  }, [eventId]);
+  }, []);
 
   useEffect(() => {
     const fetchEventData = async () => {

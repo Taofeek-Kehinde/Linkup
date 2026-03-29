@@ -10,4 +10,4 @@
 - [ ] 7. Deploy Vercel
 - [ ] 8. Complete
 
-Current: DateQr now auto-redirects ANY /date-qr/:eventId to Picture. Test & deploy.
+Current: Reverted DateQr: Admin Generate QR -> /date-qr/{id} shows QR page. Root / scan -> Picture via session. /picture/{id} QR -> Picture direct. Ready for test/deploy.
