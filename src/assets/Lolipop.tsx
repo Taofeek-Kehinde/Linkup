@@ -7,7 +7,7 @@ import { FaChevronDown, FaHeart, FaArrowRight } from 'react-icons/fa';
 const Lollipop: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
-
+  
   const [locations, setLocations] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
@@ -38,7 +38,7 @@ const Lollipop: React.FC = () => {
         const photosRef = collection(db, `events/${eventId}/photos`);
         const q = query(photosRef, orderBy("timestamp", "desc"));
         const querySnapshot = await getDocs(q);
-
+        
         if (!querySnapshot.empty) {
           const latestPhoto = querySnapshot.docs[0].data();
           setUserPhoto(latestPhoto.photoUrl);
@@ -70,7 +70,7 @@ const Lollipop: React.FC = () => {
       const photosRef = collection(db, `events/${eventId}/photos`);
       const q = query(photosRef, orderBy("timestamp", "desc"));
       const querySnapshot = await getDocs(q);
-
+      
       let photoUrl = "";
       if (!querySnapshot.empty) {
         photoUrl = querySnapshot.docs[0].data().photoUrl;
@@ -94,7 +94,7 @@ const Lollipop: React.FC = () => {
 
       // Redirect to gallery page showing all participants
       navigate(`/gallery/${eventId}`);
-
+      
     } catch (err) {
       console.error("Error saving choice:", err);
       alert("Failed to save your choice. Please try again.");
@@ -132,7 +132,7 @@ const Lollipop: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#f5f7fb',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       padding: 'clamp(20px, 5vh, 40px) 20px',
       fontFamily: 'system-ui, sans-serif'
     }}>
@@ -142,7 +142,7 @@ const Lollipop: React.FC = () => {
         animation: 'fadeIn 0.6s ease-out'
       }}>
         {/* Header */}
-        {/* <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <h1 style={{
             color: 'white',
             fontSize: 'clamp(32px, 6vw, 48px)',
@@ -153,23 +153,23 @@ const Lollipop: React.FC = () => {
             🍭 LINK UP
           </h1>
           <p style={{
-            color: 'black',
+            color: 'rgba(255,255,255,0.9)',
             fontSize: 'clamp(14px, 3vw, 18px)',
             fontStyle: 'italic'
           }}>
             {eventName}
           </p>
-        </div> */}
+        </div>
 
         {/* Single Column Layout - Choice Selection Only */}
         <div style={{
-          // background: 'white',
-          // borderRadius: '24px',
-          // padding: 'clamp(25px, 4vw, 35px)',
-          // boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+          background: 'white',
+          borderRadius: '24px',
+          padding: 'clamp(25px, 4vw, 35px)',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
           animation: 'slideUp 0.5s ease-out'
         }}>
-          {/* <h2 style={{
+          <h2 style={{
             color: '#1e4fa3',
             fontSize: 'clamp(20px, 4vw, 24px)',
             marginBottom: '30px',
@@ -177,88 +177,85 @@ const Lollipop: React.FC = () => {
             fontWeight: '600'
           }}>
             What's your vibe?
-          </h2> */}
+          </h2>
 
-<div
-  style={{
-    display: 'flex',
-    justifyContent: 'center', // center horizontally
-    alignItems: 'center',     // center vertically
-    gap: '20px',              // space between candies and OR
-    marginBottom: '35px'
-  }}
->
-  {/** Define a single size variable for all circles **/}
-  {/** Example: clamp(min 140px, 25vw, max 180px) **/}
-  {/** This will make sure all circles are perfectly round and same size **/}
-  {/** Chocolate */}
-  <div
-    onClick={() => setSelectedChoice('chocolate')}
-    style={{
-      background: '#3E2723',
-      borderRadius: '50%',
-      width: 'clamp(140px, 28vw, 180px)',
-      height: 'clamp(140px, 28vw, 180px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      border: selectedChoice === 'chocolate' ? '4px solid #795548' : '2px solid transparent',
-      transform: selectedChoice === 'chocolate' ? 'scale(1.08)' : 'scale(1)',
-      boxShadow: selectedChoice === 'chocolate'
-        ? '0 10px 25px rgba(62,39,35,0.4)'
-        : '0 6px 15px rgba(0,0,0,0.08)'
-    }}
-  >
-    <div style={{ fontSize: 'clamp(50px, 10vw, 80px)' }}>🍫</div>
-  </div>
+          {/* Choice Options - No Icons, No Text */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '20px',
+            marginBottom: '35px'
+          }}>
+            {/* Lollipop Option - Yellow Background */}
+            <div
+              onClick={() => setSelectedChoice('lollipop')}
+              style={{
+                background: selectedChoice === 'lollipop' 
+                  ? '#FFD700' 
+                  : '#FFF3CD',
+                borderRadius: '20px',
+                padding: '50px 15px',
+                textAlign: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                border: selectedChoice === 'lollipop' ? '3px solid #FFA500' : '2px solid #FFE082',
+                transform: selectedChoice === 'lollipop' ? 'scale(1.02)' : 'scale(1)',
+                boxShadow: selectedChoice === 'lollipop' ? '0 10px 20px rgba(255,215,0,0.3)' : 'none'
+              }}
+              onMouseEnter={(e) => {
+                if (selectedChoice !== 'lollipop') {
+                  e.currentTarget.style.background = '#FFE082';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selectedChoice !== 'lollipop') {
+                  e.currentTarget.style.background = '#FFF3CD';
+                }
+              }}
+            >
+              <div style={{
+                fontSize: 'clamp(50px, 10vw, 80px)',
+                marginBottom: '10px'
+              }}>
+                🍭
+              </div>
+            </div>
 
-  {/** OR Circle */}
-  <div
-    style={{
-      width: 'clamp(140px, 28vw, 180px)',   // same as candies
-      height: 'clamp(140px, 28vw, 180px)',  // same as candies
-      borderRadius: '50%',
-      textShadow: '0 1px 2px rgba(0,0,0,0.4)',
-      background: 'linear-gradient(to right, #3E2723 50%, #FFD700 50%)', // left = chocolate, right = lollipop
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontWeight: 700,
-      fontSize: 'clamp(16px, 4vw, 20px)',
-      color: 'white',
-      boxShadow: '0 6px 18px rgba(0,0,0,0.15)',
-      letterSpacing: '1px'
-    }}
-  >
-    OR
-  </div>
-
-  {/** Lollipop */}
-  <div
-    onClick={() => setSelectedChoice('lollipop')}
-    style={{
-      background: '#FFD700',
-      borderRadius: '50%',
-      width: 'clamp(140px, 28vw, 180px)',
-      height: 'clamp(140px, 28vw, 180px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      border: selectedChoice === 'lollipop' ? '4px solid #FF8F00' : '2px solid transparent',
-      transform: selectedChoice === 'lollipop' ? 'scale(1.08)' : 'scale(1)',
-      boxShadow: selectedChoice === 'lollipop'
-        ? '0 10px 25px rgba(255,193,7,0.4)'
-        : '0 6px 15px rgba(0,0,0,0.08)'
-    }}
-  >
-    <div style={{ fontSize: 'clamp(50px, 10vw, 80px)' }}>🍭</div>
-  </div>
-</div>
-           
+            {/* Chocolate Option - Deep Brown Background */}
+            <div
+              onClick={() => setSelectedChoice('chocolate')}
+              style={{
+                background: selectedChoice === 'chocolate' 
+                  ? '#3E2723' 
+                  : '#D7CCC8',
+                borderRadius: '20px',
+                padding: '50px 15px',
+                textAlign: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                border: selectedChoice === 'chocolate' ? '3px solid #5D4037' : '2px solid #BCAAA4',
+                transform: selectedChoice === 'chocolate' ? 'scale(1.02)' : 'scale(1)',
+                boxShadow: selectedChoice === 'chocolate' ? '0 10px 20px rgba(62,39,35,0.3)' : 'none'
+              }}
+              onMouseEnter={(e) => {
+                if (selectedChoice !== 'chocolate') {
+                  e.currentTarget.style.background = '#BCAAA4';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selectedChoice !== 'chocolate') {
+                  e.currentTarget.style.background = '#D7CCC8';
+                }
+              }}
+            >
+              <div style={{
+                fontSize: 'clamp(50px, 10vw, 80px)',
+                marginBottom: '10px'
+              }}>
+                🍫
+              </div>
+            </div>
+          </div>
 
           {/* Location Dropdown */}
           <div style={{ marginBottom: '30px' }}>
@@ -297,7 +294,7 @@ const Lollipop: React.FC = () => {
                   transition: 'transform 0.3s ease'
                 }} />
               </div>
-
+              
               {isDropdownOpen && (
                 <>
                   <div
