@@ -172,8 +172,9 @@ const Lollipop: React.FC = () => {
           {/* Choice Options - No Icons, No Text */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: '1fr auto 1fr',
-            gap: '10px',
+            gridTemplateColumns: '1fr 80px 1fr',
+            gap: '20px',
+            justifyItems: 'center',
             marginBottom: '35px'
           }}>
 
