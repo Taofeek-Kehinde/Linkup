@@ -132,7 +132,7 @@ const Lollipop: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: '#f5f7fb',
       padding: 'clamp(20px, 5vh, 40px) 20px',
       fontFamily: 'system-ui, sans-serif'
     }}>
