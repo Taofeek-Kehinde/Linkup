@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { FaArrowLeft, FaCalendarAlt, FaMapMarkerAlt, FaShareAlt, FaDownload } from 'react-icons/fa';
-import { IoMusicalNotes } from 'react-icons/io5';
+// import { IoMusicalNotes } from 'react-icons/io5';
 
 // Extend Window interface to include QRCode
 declare global {

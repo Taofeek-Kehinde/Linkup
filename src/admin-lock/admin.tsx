@@ -34,12 +34,12 @@ interface LocationData {
   name: string;
 }
 
-interface EventData {
-  eventName: string;
-  locations: string[];
-  createdAt: any;
-  eventId: string;
-}
+// interface EventData {
+//   eventName: string;
+//   locations: string[];
+//   createdAt: any;
+//   eventId: string;
+// }
 
 // Admin Lock Component with Encryption
 const AdminLock: React.FC<{ children: React.ReactNode }> = ({ children }) => {
