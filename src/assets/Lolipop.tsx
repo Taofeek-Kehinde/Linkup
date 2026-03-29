@@ -188,95 +188,73 @@ const Lollipop: React.FC = () => {
           }}>
             {/* Lollipop Option - Yellow Background */}
             <div
-              onClick={() => setSelectedChoice('lollipop')}
-              style={{
-                background: selectedChoice === 'lollipop'
-                  ? '#FFD700'
-                  : '#FFF3CD',
+  onClick={() => setSelectedChoice('lollipop')}
+  style={{
+    background: '#FFD700', // always yellow
 
-                borderRadius: '50%', // perfect circle
-                width: 'clamp(120px, 30vw, 180px)',
-                height: 'clamp(120px, 30vw, 180px)',
+    borderRadius: '50%',
+    width: 'clamp(140px, 28vw, 180px)',
+    height: 'clamp(140px, 28vw, 180px)',
 
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
 
-                textAlign: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
 
-                border: selectedChoice === 'lollipop'
-                  ? '3px solid #FFA500'
-                  : '2px solid #FFE082',
+    border: selectedChoice === 'lollipop'
+      ? '4px solid #FF8F00'
+      : '2px solid transparent',
 
-                transform: selectedChoice === 'lollipop'
-                  ? 'scale(1.05)'
-                  : 'scale(1)',
+    transform: selectedChoice === 'lollipop'
+      ? 'scale(1.08)'
+      : 'scale(1)',
 
-                boxShadow: selectedChoice === 'lollipop'
-                  ? '0 10px 20px rgba(255,215,0,0.3)'
-                  : 'none'
-              }}
-              onMouseEnter={(e) => {
-                if (selectedChoice !== 'lollipop') {
-                  e.currentTarget.style.background = '#FFE082';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selectedChoice !== 'lollipop') {
-                  e.currentTarget.style.background = '#FFF3CD';
-                }
-              }}
-            >
-              <div style={{
-                fontSize: 'clamp(50px, 10vw, 80px)',
-                marginBottom: '10px'
-              }}>
-                🍭
-              </div>
-            </div>
+    boxShadow: selectedChoice === 'lollipop'
+      ? '0 10px 25px rgba(255,193,7,0.4)'
+      : '0 6px 15px rgba(0,0,0,0.08)'
+  }}
+>
+  <div style={{ fontSize: 'clamp(50px, 10vw, 80px)' }}>
+    🍭
+  </div>
+</div>
 
             {/* Chocolate Option - Deep Brown Background */}
             <div
-              onClick={() => setSelectedChoice('chocolate')}
-              style={{
-                background: selectedChoice === 'chocolate'
-                  ? '#3E2723'
-                  : '#D7CCC8',
+  onClick={() => setSelectedChoice('chocolate')}
+  style={{
+    background: '#3E2723', // always brown
 
-                borderRadius: '50%',
-                width: '150px',
-                height: '150px',
+    borderRadius: '50%',
+    width: 'clamp(140px, 28vw, 180px)',
+    height: 'clamp(140px, 28vw, 180px)',
 
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
 
-                textAlign: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
 
-                border: selectedChoice === 'chocolate'
-                  ? '3px solid #5D4037'
-                  : '2px solid #BCAAA4',
+    border: selectedChoice === 'chocolate'
+      ? '4px solid #795548'
+      : '2px solid transparent',
 
-                transform: selectedChoice === 'chocolate'
-                  ? 'scale(1.05)'
-                  : 'scale(1)',
+    transform: selectedChoice === 'chocolate'
+      ? 'scale(1.08)'
+      : 'scale(1)',
 
-                boxShadow: selectedChoice === 'chocolate'
-                  ? '0 10px 20px rgba(62,39,35,0.3)'
-                  : 'none'
-              }}
-            >
-              <div style={{
-                fontSize: 'clamp(50px, 10vw, 80px)',
-                marginBottom: '10px'
-              }}>
-                🍫
-              </div>
-            </div>
+    boxShadow: selectedChoice === 'chocolate'
+      ? '0 10px 25px rgba(62,39,35,0.4)'
+      : '0 6px 15px rgba(0,0,0,0.08)'
+  }}
+>
+  <div style={{ fontSize: 'clamp(50px, 10vw, 80px)' }}>
+    🍫
+  </div>
+</div>
           </div>
 
           {/* Location Dropdown */}
