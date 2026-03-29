@@ -117,7 +117,7 @@ const Lollipop: React.FC = () => {
           <div style={{
             width: '40px',
             height: '40px',
-            border: '3px solid #e8eef5',
+            border: '3px solid #f5f7fb',
             borderTopColor: '#1e4fa3',
             borderRadius: '50%',
             animation: 'spin 0.8s linear infinite',
@@ -132,8 +132,8 @@ const Lollipop: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#f5f7fb',
-      padding: 'clamp(20px, 5vh, 40px) 20px',
+      // background: '#f5f7fb',
+      // padding: 'clamp(20px, 5vh, 40px) 20px',
       fontFamily: 'system-ui, sans-serif'
     }}>
       <div style={{
