@@ -197,18 +197,21 @@ const Lollipop: React.FC = () => {
           {/* OR Separator - Gradient Circle */}
           <div
             style={{
-              background: 'linear-gradient(to right, #3E2723 50%, #FFD700 50%)',
+              position: 'relative',
+              top: '15px',
+              background: 'linear-gradient(90deg, #FFD700 0%, #3E2723 50%, #FFD700 100%)',
               borderRadius: '50%',
-              width: 'clamp(80px, 16vw, 110px)',
-              height: 'clamp(80px, 16vw, 110px)',
+              width: 'clamp(60px, 12vw, 90px)',
+              height: 'clamp(60px, 12vw, 90px)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 'clamp(16px, 3.5vw, 24px)',
+              fontSize: 'clamp(14px, 3vw, 22px)',
               fontWeight: 'bold',
               color: 'white',
               textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-              boxShadow: '0 6px 15px rgba(0,0,0,0.1)'
+              boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+              zIndex: 1
             }}
           >
             OR
