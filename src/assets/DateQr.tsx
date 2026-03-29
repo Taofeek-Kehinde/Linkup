@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { FaArrowLeft, FaCalendarAlt, FaMapMarkerAlt, FaShareAlt, FaDownload } from 'react-icons/fa';
-// import { IoMusicalNotes } from 'react-icons/io5';
 
 declare global {
   interface Window {
@@ -19,29 +18,48 @@ const DateQr: React.FC = () => {
   const [locations, setLocations] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const [currentEventId, setCurrentEventId] = useState<string>("");
 
   // Get the correct URL for Vercel deployment
   const getRedirectUrl = () => {
-    // Use the current origin (works on Vercel, localhost, etc.)
     const baseUrl = window.location.origin;
-    return `${baseUrl}/picture/${eventId}`;
+    // Use the eventId from URL params or from state
+    const id = eventId || currentEventId;
+    if (!id) return baseUrl;
+    return `${baseUrl}/picture/${id}`;
   };
 
   useEffect(() => {
     const fetchEventData = async () => {
-      if (!eventId) {
-        setError("No event ID found");
+      // First, try to get eventId from URL params
+      let id: string | undefined = eventId;
+      
+      // If no eventId in URL, try to get from sessionStorage
+      if (!id) {
+        const storedId = sessionStorage.getItem('currentEventId');
+        if (storedId) {
+          id = storedId;
+          setCurrentEventId(storedId);
+        }
+      } else {
+        setCurrentEventId(id);
+      }
+      
+      if (!id) {
+        setError("No event ID found. Please scan a valid QR code.");
         setLoading(false);
         return;
       }
 
       try {
-        const eventDoc = await getDoc(doc(db, "events", eventId));
+        const eventDoc = await getDoc(doc(db, "events", id));
         
         if (eventDoc.exists()) {
           const data = eventDoc.data();
           setEventName(data.eventName || "LINK UP Event");
           setLocations(data.locations || []);
+          // Store the eventId for future use
+          sessionStorage.setItem('currentEventId', id);
         } else {
           const savedName = sessionStorage.getItem('currentEventName');
           const savedLocations = sessionStorage.getItem('currentEventLocations');
@@ -68,6 +86,7 @@ const DateQr: React.FC = () => {
 
   useEffect(() => {
     if (loading) return;
+    if (!currentEventId) return;
 
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
@@ -92,7 +111,7 @@ const DateQr: React.FC = () => {
         qrCodeRef.current.innerHTML = '';
       }
     };
-  }, [loading, eventId]);
+  }, [loading, currentEventId]);
 
   const handleShare = () => {
     const shareUrl = getRedirectUrl();
@@ -121,12 +140,11 @@ const DateQr: React.FC = () => {
   if (loading) {
     return (
       <div style={{
-        minHeight: 'auto',
+        minHeight: '100vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         background: '#f5f7fb',
-        padding: 'clamp(40px, 8vh, 100px) 20px',
         fontFamily: 'system-ui, sans-serif'
       }}>
         <div style={{ textAlign: 'center' }}>
@@ -145,9 +163,72 @@ const DateQr: React.FC = () => {
     );
   }
 
+  if (error && !currentEventId) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: '#f5f7fb',
+        padding: 'clamp(40px, 8vh, 100px) 20px',
+        fontFamily: 'system-ui, sans-serif'
+      }}>
+        <div style={{
+          textAlign: 'center',
+          width: '100%',
+          maxWidth: '480px',
+          animation: 'fadeIn 1s ease-in-out'
+        }}>
+          <h1 style={{
+            color: '#1e4fa3',
+            letterSpacing: '6px',
+            fontWeight: '700',
+            fontSize: 'clamp(28px, 5vw, 42px)',
+            marginBottom: '5px'
+          }}>
+            LINK UP
+          </h1>
+          <p style={{
+            color: '#1e4fa3',
+            fontStyle: 'italic',
+            fontSize: 'clamp(16px, 3vw, 22px)',
+            marginBottom: '40px'
+          }}>
+            in the moment
+          </p>
+          <div style={{
+            background: 'white',
+            borderRadius: '24px',
+            padding: '40px',
+            textAlign: 'center',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
+          }}>
+            <h2 style={{ color: '#e74c3c', marginBottom: '10px' }}>No Event Found</h2>
+            <p style={{ color: '#7f8c8d' }}>{error}</p>
+            <button
+              onClick={() => navigate('/admin')}
+              style={{
+                marginTop: '20px',
+                background: '#1e4fa3',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '50px',
+                cursor: 'pointer'
+              }}
+            >
+              Go to Admin
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{
-      minHeight: 'auto',
+      minHeight: '100vh',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
@@ -269,7 +350,7 @@ const DateQr: React.FC = () => {
           (Scan to linkup)
         </p>
 
-        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
           <button
             onClick={handleShare}
             style={{
@@ -317,12 +398,6 @@ const DateQr: React.FC = () => {
             <FaDownload /> Save QR
           </button>
         </div>
-
-        {error && (
-          <p style={{ color: '#e74c3c', fontSize: '12px', marginTop: '20px' }}>
-            {error}
-          </p>
-        )}
       </div>
 
       <style>{`
