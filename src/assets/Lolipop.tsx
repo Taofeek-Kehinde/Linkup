@@ -132,8 +132,8 @@ const Lollipop: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#f5f7fb',
-      padding: 'clamp(20px, 5vh, 40px) 20px',
+      // background: '#f5f7fb',
+      // padding: 'clamp(20px, 5vh, 40px) 20px',
       fontFamily: 'system-ui, sans-serif'
     }}>
       <div style={{
@@ -142,25 +142,6 @@ const Lollipop: React.FC = () => {
         animation: 'fadeIn 0.6s ease-out'
       }}>
 
-   {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <h1 style={{
-            color: 'black',
-            fontSize: 'clamp(32px, 6vw, 48px)',
-            fontWeight: '700',
-            marginBottom: '10px',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
-          }}>
-            🍭 LINK UP
-          </h1>
-          <p style={{
-            color: 'rgba(255,255,255,0.9)',
-            fontSize: 'clamp(14px, 3vw, 18px)',
-            fontStyle: 'italic'
-          }}>
-            {eventName}
-          </p>
-        </div>
 
         {/* Single Column Layout - Choice Selection Only */}
         <div style={{
@@ -172,9 +153,8 @@ const Lollipop: React.FC = () => {
           {/* Choice Options - No Icons, No Text */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 80px 1fr',
-            gap: '20px',
-            justifyItems: 'center',
+            gridTemplateColumns: '1fr auto 1fr',
+            gap: '5px',
             marginBottom: '35px'
           }}>
 
@@ -219,7 +199,7 @@ const Lollipop: React.FC = () => {
             style={{
               position: 'relative',
               top: '15px',
-              background: 'linear-gradient(to right, #3E2723 50%, #FFD700 50%)',
+              background: 'linear-gradient(90deg, #FFD700 0%, #3E2723 50%, #FFD700 100%)',
               borderRadius: '50%',
               width: 'clamp(60px, 12vw, 90px)',
               height: 'clamp(60px, 12vw, 90px)',
