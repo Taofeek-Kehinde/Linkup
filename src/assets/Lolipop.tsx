@@ -7,7 +7,7 @@ import { FaChevronDown, FaHeart, FaArrowRight } from 'react-icons/fa';
 const Lollipop: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
-  
+
   const [locations, setLocations] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
@@ -38,7 +38,7 @@ const Lollipop: React.FC = () => {
         const photosRef = collection(db, `events/${eventId}/photos`);
         const q = query(photosRef, orderBy("timestamp", "desc"));
         const querySnapshot = await getDocs(q);
-        
+
         if (!querySnapshot.empty) {
           const latestPhoto = querySnapshot.docs[0].data();
           setUserPhoto(latestPhoto.photoUrl);
@@ -70,7 +70,7 @@ const Lollipop: React.FC = () => {
       const photosRef = collection(db, `events/${eventId}/photos`);
       const q = query(photosRef, orderBy("timestamp", "desc"));
       const querySnapshot = await getDocs(q);
-      
+
       let photoUrl = "";
       if (!querySnapshot.empty) {
         photoUrl = querySnapshot.docs[0].data().photoUrl;
@@ -94,7 +94,7 @@ const Lollipop: React.FC = () => {
 
       // Redirect to gallery page showing all participants
       navigate(`/gallery/${eventId}`);
-      
+
     } catch (err) {
       console.error("Error saving choice:", err);
       alert("Failed to save your choice. Please try again.");
@@ -190,17 +190,33 @@ const Lollipop: React.FC = () => {
             <div
               onClick={() => setSelectedChoice('lollipop')}
               style={{
-                background: selectedChoice === 'lollipop' 
-                  ? '#FFD700' 
+                background: selectedChoice === 'lollipop'
+                  ? '#FFD700'
                   : '#FFF3CD',
-                borderRadius: '20px',
-                padding: '50px 15px',
+
+                borderRadius: '50%', // perfect circle
+                width: 'clamp(120px, 30vw, 180px)',
+                height: 'clamp(120px, 30vw, 180px)',
+
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+
                 textAlign: 'center',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                border: selectedChoice === 'lollipop' ? '3px solid #FFA500' : '2px solid #FFE082',
-                transform: selectedChoice === 'lollipop' ? 'scale(1.02)' : 'scale(1)',
-                boxShadow: selectedChoice === 'lollipop' ? '0 10px 20px rgba(255,215,0,0.3)' : 'none'
+
+                border: selectedChoice === 'lollipop'
+                  ? '3px solid #FFA500'
+                  : '2px solid #FFE082',
+
+                transform: selectedChoice === 'lollipop'
+                  ? 'scale(1.05)'
+                  : 'scale(1)',
+
+                boxShadow: selectedChoice === 'lollipop'
+                  ? '0 10px 20px rgba(255,215,0,0.3)'
+                  : 'none'
               }}
               onMouseEnter={(e) => {
                 if (selectedChoice !== 'lollipop') {
@@ -225,27 +241,33 @@ const Lollipop: React.FC = () => {
             <div
               onClick={() => setSelectedChoice('chocolate')}
               style={{
-                background: selectedChoice === 'chocolate' 
-                  ? '#3E2723' 
+                background: selectedChoice === 'chocolate'
+                  ? '#3E2723'
                   : '#D7CCC8',
-                borderRadius: '20px',
-                padding: '50px 15px',
+
+                borderRadius: '50%',
+                width: '150px',
+                height: '150px',
+
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+
                 textAlign: 'center',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                border: selectedChoice === 'chocolate' ? '3px solid #5D4037' : '2px solid #BCAAA4',
-                transform: selectedChoice === 'chocolate' ? 'scale(1.02)' : 'scale(1)',
-                boxShadow: selectedChoice === 'chocolate' ? '0 10px 20px rgba(62,39,35,0.3)' : 'none'
-              }}
-              onMouseEnter={(e) => {
-                if (selectedChoice !== 'chocolate') {
-                  e.currentTarget.style.background = '#BCAAA4';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selectedChoice !== 'chocolate') {
-                  e.currentTarget.style.background = '#D7CCC8';
-                }
+
+                border: selectedChoice === 'chocolate'
+                  ? '3px solid #5D4037'
+                  : '2px solid #BCAAA4',
+
+                transform: selectedChoice === 'chocolate'
+                  ? 'scale(1.05)'
+                  : 'scale(1)',
+
+                boxShadow: selectedChoice === 'chocolate'
+                  ? '0 10px 20px rgba(62,39,35,0.3)'
+                  : 'none'
               }}
             >
               <div style={{
@@ -294,7 +316,7 @@ const Lollipop: React.FC = () => {
                   transition: 'transform 0.3s ease'
                 }} />
               </div>
-              
+
               {isDropdownOpen && (
                 <>
                   <div
