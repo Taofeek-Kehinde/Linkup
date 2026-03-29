@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, getDoc, collection, addDoc, query, getDocs, orderBy } from 'firebase/firestore';
-import { FaChevronDown, FaHeart, FaCandyCane, FaArrowRight } from 'react-icons/fa';
-import { GiChocolateBar } from 'react-icons/gi';
+import { FaChevronDown, FaHeart, FaArrowRight } from 'react-icons/fa';
 
 const Lollipop: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
@@ -180,105 +179,81 @@ const Lollipop: React.FC = () => {
             What's your vibe?
           </h2>
 
-          {/* Choice Options */}
+          {/* Choice Options - No Icons, No Text */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gap: '20px',
             marginBottom: '35px'
           }}>
-            {/* Lollipop Option */}
+            {/* Lollipop Option - Yellow Background */}
             <div
               onClick={() => setSelectedChoice('lollipop')}
               style={{
                 background: selectedChoice === 'lollipop' 
-                  ? 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' 
-                  : '#f8f9fa',
+                  ? '#FFD700' 
+                  : '#FFF3CD',
                 borderRadius: '20px',
-                padding: '25px 15px',
+                padding: '50px 15px',
                 textAlign: 'center',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                border: selectedChoice === 'lollipop' ? '3px solid #f5576c' : '2px solid #e8eef5',
-                transform: selectedChoice === 'lollipop' ? 'scale(1.02)' : 'scale(1)'
+                border: selectedChoice === 'lollipop' ? '3px solid #FFA500' : '2px solid #FFE082',
+                transform: selectedChoice === 'lollipop' ? 'scale(1.02)' : 'scale(1)',
+                boxShadow: selectedChoice === 'lollipop' ? '0 10px 20px rgba(255,215,0,0.3)' : 'none'
               }}
               onMouseEnter={(e) => {
                 if (selectedChoice !== 'lollipop') {
-                  e.currentTarget.style.background = '#f0f0f0';
+                  e.currentTarget.style.background = '#FFE082';
                 }
               }}
               onMouseLeave={(e) => {
                 if (selectedChoice !== 'lollipop') {
-                  e.currentTarget.style.background = '#f8f9fa';
+                  e.currentTarget.style.background = '#FFF3CD';
                 }
               }}
             >
-              <FaCandyCane style={{
-                fontSize: 'clamp(40px, 8vw, 60px)',
-                color: selectedChoice === 'lollipop' ? 'white' : '#f5576c',
-                marginBottom: '15px'
-              }} />
-              <h3 style={{
-                fontSize: 'clamp(16px, 3vw, 18px)',
-                fontWeight: '600',
-                color: selectedChoice === 'lollipop' ? 'white' : '#333',
-                marginBottom: '5px'
+              <div style={{
+                fontSize: 'clamp(50px, 10vw, 80px)',
+                marginBottom: '10px'
               }}>
-                🍭 Lollipop
-              </h3>
-              <p style={{
-                fontSize: '12px',
-                color: selectedChoice === 'lollipop' ? 'rgba(255,255,255,0.9)' : '#7f8c8d'
-              }}>
-                Sweet & Colorful
-              </p>
+                🍭
+              </div>
             </div>
 
-            {/* Chocolate Option */}
+            {/* Chocolate Option - Deep Brown Background */}
             <div
               onClick={() => setSelectedChoice('chocolate')}
               style={{
                 background: selectedChoice === 'chocolate' 
-                  ? 'linear-gradient(135deg, #a8c0ff 0%, #3f2b1d 100%)' 
-                  : '#f8f9fa',
+                  ? '#3E2723' 
+                  : '#D7CCC8',
                 borderRadius: '20px',
-                padding: '25px 15px',
+                padding: '50px 15px',
                 textAlign: 'center',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                border: selectedChoice === 'chocolate' ? '3px solid #8B4513' : '2px solid #e8eef5',
-                transform: selectedChoice === 'chocolate' ? 'scale(1.02)' : 'scale(1)'
+                border: selectedChoice === 'chocolate' ? '3px solid #5D4037' : '2px solid #BCAAA4',
+                transform: selectedChoice === 'chocolate' ? 'scale(1.02)' : 'scale(1)',
+                boxShadow: selectedChoice === 'chocolate' ? '0 10px 20px rgba(62,39,35,0.3)' : 'none'
               }}
               onMouseEnter={(e) => {
                 if (selectedChoice !== 'chocolate') {
-                  e.currentTarget.style.background = '#f0f0f0';
+                  e.currentTarget.style.background = '#BCAAA4';
                 }
               }}
               onMouseLeave={(e) => {
                 if (selectedChoice !== 'chocolate') {
-                  e.currentTarget.style.background = '#f8f9fa';
+                  e.currentTarget.style.background = '#D7CCC8';
                 }
               }}
             >
-              <GiChocolateBar style={{
-                fontSize: 'clamp(40px, 8vw, 60px)',
-                color: selectedChoice === 'chocolate' ? 'white' : '#8B4513',
-                marginBottom: '15px'
-              }} />
-              <h3 style={{
-                fontSize: 'clamp(16px, 3vw, 18px)',
-                fontWeight: '600',
-                color: selectedChoice === 'chocolate' ? 'white' : '#333',
-                marginBottom: '5px'
+              <div style={{
+                fontSize: 'clamp(50px, 10vw, 80px)',
+                marginBottom: '10px'
               }}>
-                🍫 Chocolate
-              </h3>
-              <p style={{
-                fontSize: '12px',
-                color: selectedChoice === 'chocolate' ? 'rgba(255,255,255,0.9)' : '#7f8c8d'
-              }}>
-                Rich & Creamy
-              </p>
+                🍫
+              </div>
             </div>
           </div>
 
@@ -420,13 +395,13 @@ const Lollipop: React.FC = () => {
             </div>
           )}
 
-          {/* LINK UP Button */}
+          {/* LINK UP Button - Brown Background */}
           <button
             onClick={handleSubmit}
             disabled={submitting}
             style={{
               width: '100%',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              background: '#5D4037',
               color: 'white',
               border: 'none',
               padding: '16px 20px',
@@ -443,11 +418,13 @@ const Lollipop: React.FC = () => {
             }}
             onMouseEnter={(e) => {
               if (!submitting) {
+                e.currentTarget.style.background = '#3E2723';
                 e.currentTarget.style.transform = 'translateY(-2px)';
                 e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
               }
             }}
             onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#5D4037';
               e.currentTarget.style.transform = 'translateY(0)';
               e.currentTarget.style.boxShadow = 'none';
             }}
