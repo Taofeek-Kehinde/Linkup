@@ -195,6 +195,7 @@ const Gallery: React.FC = () => {
                   padding: '8px 0',
                   fontSize: '14px',
                   cursor: 'pointer',
+                  marginBottom: '15px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
