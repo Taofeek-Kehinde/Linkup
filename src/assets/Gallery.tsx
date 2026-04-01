@@ -170,18 +170,17 @@ const Gallery: React.FC = () => {
           position: 'relative',
           marginBottom: '30px'
         }}>
-          <div style={{ textAlign: 'center' }}>
-            <h1 style={{
-              color: 'black',
-              fontSize: 'clamp(24px, 5vw, 36px)',
-              fontWeight: '700',
-              marginBottom: '5px',
-              letterSpacing: '2px'
-            }}>
-              CANDY & CLASSY
-            </h1>
-
-          </div>
+          <div style={{ textAlign: 'center', marginTop: '-30px' }}>
+  <h1 style={{
+    color: 'black',
+    fontSize: 'clamp(24px, 5vw, 36px)',
+    fontWeight: '700',
+    margin: '0',   // important
+    letterSpacing: '2px'
+  }}>
+    CANDY & CLASSY
+  </h1>
+</div>
           
           {/* Location Filter Dropdown - Top Right - Black text, no background */}
           <div style={{
