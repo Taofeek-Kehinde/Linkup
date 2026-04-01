@@ -379,7 +379,7 @@ const Lollipop: React.FC = () => {
               color: 'white',
               border: 'none',
               padding: '16px 20px',
-              borderRadius: '50px',
+              borderRadius: '10px',
               fontSize: '18px',
               fontWeight: '600',
               cursor: submitting ? 'not-allowed' : 'pointer',
@@ -409,7 +409,7 @@ const Lollipop: React.FC = () => {
                   height: '20px',
                   border: '2px solid white',
                   borderTopColor: 'transparent',
-                  borderRadius: '10%',
+                  borderRadius: '10px',
                   animation: 'spin 0.8s linear infinite'
                 }} />
                 Linking up...
