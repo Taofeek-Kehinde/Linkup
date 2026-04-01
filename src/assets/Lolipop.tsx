@@ -135,9 +135,10 @@ const Lollipop: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: '#f5f7fb',
       display: 'flex',
       alignItems: 'center',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
       justifyContent: 'center',
       padding: 'clamp(20px, 5vh, 40px) 20px',
       fontFamily: 'system-ui, sans-serif'
@@ -408,7 +409,7 @@ const Lollipop: React.FC = () => {
                   height: '20px',
                   border: '2px solid white',
                   borderTopColor: 'transparent',
-                  borderRadius: '50%',
+                  borderRadius: '10%',
                   animation: 'spin 0.8s linear infinite'
                 }} />
                 Linking up...
