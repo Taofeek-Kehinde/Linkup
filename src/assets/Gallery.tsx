@@ -179,9 +179,7 @@ const Gallery: React.FC = () => {
             }}>
               CANDY & CLASSY
             </h1>
-            <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px' }}>
-              {eventName}
-            </p>
+         
           </div>
           
           {/* Location Filter Dropdown - Top Right */}
