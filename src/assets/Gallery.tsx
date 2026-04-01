@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
-import { collection, query, orderBy, getDocs, doc, getDoc, } from 'firebase/firestore';
-import { FaArrowLeft, FaMapMarkerAlt,  FaCamera, FaUsers, FaChevronDown, FaComment } from 'react-icons/fa';
+import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
+import { FaMapMarkerAlt, FaCamera, FaChevronDown, FaComment } from 'react-icons/fa';
 
 interface Participant {
   id: string;
@@ -83,7 +83,9 @@ const Gallery: React.FC = () => {
         });
 
         setParticipants(participantsList);
-        setFilteredParticipants(participantsList);
+        // Filter out the current user from the main list
+        const filteredList = participantsList.filter(p => p.id !== currentUserId);
+        setFilteredParticipants(filteredList);
       } catch (err) {
         console.error("Error fetching participants:", err);
       } finally {
@@ -91,21 +93,25 @@ const Gallery: React.FC = () => {
       }
     };
 
-    fetchParticipants();
-  }, [eventId, navigate]);
+    if (currentUserId) {
+      fetchParticipants();
+    }
+  }, [eventId, navigate, currentUserId]);
 
-  // Filter participants when location changes
+  // Filter participants when location changes (excluding current user)
   useEffect(() => {
+    let baseList = participants.filter(p => p.id !== currentUserId);
+    
     if (selectedLocation === "all") {
-      setFilteredParticipants(participants);
+      setFilteredParticipants(baseList);
     } else {
-      const filtered = participants.filter(p => p.location === selectedLocation);
+      const filtered = baseList.filter(p => p.location === selectedLocation);
       setFilteredParticipants(filtered);
     }
-  }, [selectedLocation, participants]);
+  }, [selectedLocation, participants, currentUserId]);
 
   const handleChat = (participant: Participant) => {
-    // Don't allow chatting with yourself
+    // Don't allow chatting with yourself (already filtered out, but double-check)
     if (participant.id === currentUserId) {
       alert("You cannot chat with yourself!");
       return;
@@ -156,37 +162,14 @@ const Gallery: React.FC = () => {
         maxWidth: '1200px',
         margin: '0 auto'
       }}>
-        {/* Header */}
+        {/* Header - No Back Button */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '30px',
-          flexWrap: 'wrap',
-          gap: '15px'
+          justifyContent: 'center',
+          position: 'relative',
+          marginBottom: '30px'
         }}>
-          <button
-            onClick={() => navigate(`/lollipop/${eventId}`)}
-            style={{
-              background: 'white',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '50px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              fontSize: '14px',
-              fontWeight: '600',
-              color: '#1e4fa3',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateX(-5px)'}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateX(0)'}
-          >
-            <FaArrowLeft /> Back
-          </button>
-          
           <div style={{ textAlign: 'center' }}>
             <h1 style={{
               color: 'white',
@@ -201,127 +184,73 @@ const Gallery: React.FC = () => {
             </p>
           </div>
           
+          {/* Location Filter Dropdown - Top Right */}
           <div style={{
-            background: 'rgba(255,255,255,0.2)',
-            padding: '8px 16px',
-            borderRadius: '50px',
-            color: 'white',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
+            position: 'absolute',
+            right: 0,
+            top: 0
           }}>
-            <FaUsers />
-            <span style={{ fontWeight: '600' }}>{participants.length}</span>
-            <span style={{ fontSize: '12px' }}>linked up</span>
-          </div>
-        </div>
-
-        {/* Location Filter Dropdown */}
-        <div style={{
-          background: 'white',
-          borderRadius: '50px',
-          padding: '5px',
-          marginBottom: '30px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
-        }}>
-          <div style={{
-            padding: '10px 15px',
-            background: '#f5f7fb',
-            borderRadius: '50px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}>
-            <FaMapMarkerAlt style={{ color: '#1e4fa3' }} />
-            <span style={{ fontSize: '13px', fontWeight: '500', color: '#333' }}>Filter by:</span>
-          </div>
-          
-          <div style={{ position: 'relative', flex: 1 }}>
-            <div
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              style={{
-                padding: '10px 15px',
-                borderRadius: '50px',
-                fontSize: '14px',
-                background: '#fafcfd',
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                transition: 'all 0.3s ease',
-                border: '1px solid #e8eef5'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.borderColor = '#1e4fa3'}
-              onMouseLeave={(e) => e.currentTarget.style.borderColor = '#e8eef5'}
-            >
-              <span style={{ color: selectedLocation === 'all' ? '#7f8c8d' : '#1e4fa3', fontWeight: selectedLocation !== 'all' ? '500' : 'normal' }}>
-                {selectedLocation === 'all' ? 'All Locations' : selectedLocation}
-              </span>
-              <FaChevronDown style={{
-                fontSize: '10px',
-                color: '#1e4fa3',
-                transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s ease'
-              }} />
-            </div>
-            
-            {isDropdownOpen && (
-              <>
-                <div
-                  onClick={() => setIsDropdownOpen(false)}
-                  style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    zIndex: 998,
-                    background: 'transparent'
-                  }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  top: 'calc(100% + 8px)',
-                  left: 0,
-                  right: 0,
+            <div style={{ position: 'relative' }}>
+              <div
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '50px',
+                  fontSize: '14px',
                   background: 'white',
-                  borderRadius: '16px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-                  border: '1px solid #e8eef5',
-                  maxHeight: '300px',
-                  overflowY: 'auto',
-                  zIndex: 999,
-                  animation: 'dropdownFadeIn 0.2s ease-out'
-                }}>
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
+                <FaMapMarkerAlt style={{ color: '#1e4fa3' }} />
+                <span style={{ color: selectedLocation === 'all' ? '#7f8c8d' : '#1e4fa3', fontWeight: selectedLocation !== 'all' ? '500' : 'normal' }}>
+                  {selectedLocation === 'all' ? 'All Locations' : selectedLocation}
+                </span>
+                <FaChevronDown style={{
+                  fontSize: '10px',
+                  color: '#1e4fa3',
+                  transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.3s ease'
+                }} />
+              </div>
+              
+              {isDropdownOpen && (
+                <>
                   <div
-                    onClick={() => {
-                      setSelectedLocation("all");
-                      setIsDropdownOpen(false);
-                    }}
+                    onClick={() => setIsDropdownOpen(false)}
                     style={{
-                      padding: '12px 18px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      fontSize: '14px',
-                      color: '#333',
-                      background: selectedLocation === "all" ? '#e8eef5' : 'transparent',
-                      fontWeight: selectedLocation === "all" ? '600' : 'normal'
+                      position: 'fixed',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      zIndex: 998,
+                      background: 'transparent'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = '#e8eef5'}
-                    onMouseLeave={(e) => {
-                      if (selectedLocation !== "all") e.currentTarget.style.background = 'transparent';
-                    }}
-                  >
-                    🌍 All Locations
-                  </div>
-                  {locations.map((location) => (
+                  />
+                  <div style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 8px)',
+                    right: 0,
+                    minWidth: '200px',
+                    background: 'white',
+                    borderRadius: '16px',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+                    border: '1px solid #e8eef5',
+                    maxHeight: '300px',
+                    overflowY: 'auto',
+                    zIndex: 999,
+                    animation: 'dropdownFadeIn 0.2s ease-out'
+                  }}>
                     <div
-                      key={location}
                       onClick={() => {
-                        setSelectedLocation(location);
+                        setSelectedLocation("all");
                         setIsDropdownOpen(false);
                       }}
                       style={{
@@ -330,58 +259,44 @@ const Gallery: React.FC = () => {
                         transition: 'all 0.2s ease',
                         fontSize: '14px',
                         color: '#333',
-                        background: selectedLocation === location ? '#e8eef5' : 'transparent',
-                        fontWeight: selectedLocation === location ? '600' : 'normal'
+                        background: selectedLocation === "all" ? '#e8eef5' : 'transparent',
+                        fontWeight: selectedLocation === "all" ? '600' : 'normal'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.background = '#e8eef5'}
                       onMouseLeave={(e) => {
-                        if (selectedLocation !== location) e.currentTarget.style.background = 'transparent';
+                        if (selectedLocation !== "all") e.currentTarget.style.background = 'transparent';
                       }}
                     >
-                      📍 {location}
+                      🌍 All Locations
                     </div>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Stats Summary */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '15px',
-          marginBottom: '30px'
-        }}>
-          <div style={{
-            background: 'white',
-            borderRadius: '16px',
-            padding: '15px',
-            textAlign: 'center',
-            animation: 'slideUp 0.5s ease-out'
-          }}>
-            <div style={{ fontSize: '30px', marginBottom: '5px' }}>👥</div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#667eea' }}>
-              {filteredParticipants.length}
+                    {locations.map((location) => (
+                      <div
+                        key={location}
+                        onClick={() => {
+                          setSelectedLocation(location);
+                          setIsDropdownOpen(false);
+                        }}
+                        style={{
+                          padding: '12px 18px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                          fontSize: '14px',
+                          color: '#333',
+                          background: selectedLocation === location ? '#e8eef5' : 'transparent',
+                          fontWeight: selectedLocation === location ? '600' : 'normal'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#e8eef5'}
+                        onMouseLeave={(e) => {
+                          if (selectedLocation !== location) e.currentTarget.style.background = 'transparent';
+                        }}
+                      >
+                        📍 {location}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
-            <div style={{ fontSize: '12px', color: '#7f8c8d' }}>
-              {selectedLocation === 'all' ? 'Total Participants' : `in ${selectedLocation}`}
-            </div>
-          </div>
-          
-          <div style={{
-            background: 'white',
-            borderRadius: '16px',
-            padding: '15px',
-            textAlign: 'center',
-            animation: 'slideUp 0.5s ease-out 0.1s both'
-          }}>
-            <div style={{ fontSize: '30px', marginBottom: '5px' }}>📍</div>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#1e4fa3' }}>
-              {new Set(participants.map(p => p.location)).size}
-            </div>
-            <div style={{ fontSize: '12px', color: '#7f8c8d' }}>Total Locations</div>
           </div>
         </div>
 
@@ -425,137 +340,110 @@ const Gallery: React.FC = () => {
             gap: '20px',
             animation: 'fadeIn 0.6s ease-out'
           }}>
-            {filteredParticipants.map((participant, index) => {
-              const isCurrentUser = participant.id === currentUserId;
-              return (
-                <div
-                  key={participant.id}
-                  style={{
-                    background: 'white',
-                    borderRadius: '20px',
-                    overflow: 'hidden',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                    transition: 'all 0.3s ease',
-                    animation: `slideUp 0.5s ease-out ${index * 0.05}s both`,
-                    opacity: isCurrentUser ? 0.8 : 1,
-                    position: 'relative'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-5px)';
-                    e.currentTarget.style.boxShadow = '0 15px 40px rgba(0,0,0,0.15)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
-                  }}
-                >
-                  {/* "You" badge for current user */}
-                  {isCurrentUser && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '10px',
-                      left: '10px',
-                      background: '#667eea',
-                      color: 'white',
-                      padding: '4px 12px',
-                      borderRadius: '50px',
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      zIndex: 2,
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-                    }}>
-                      YOU
-                    </div>
-                  )}
-                  
-                  <div style={{
-                    position: 'relative',
-                    paddingBottom: '100%',
-                    background: '#f8f9fa'
-                  }}>
-                    {participant.photoUrl ? (
-                      <img
-                        src={participant.photoUrl}
-                        alt={`Participant from ${participant.location}`}
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover'
-                        }}
-                      />
-                    ) : (
-                      <div style={{
+            {filteredParticipants.map((participant, index) => (
+              <div
+                key={participant.id}
+                style={{
+                  background: 'white',
+                  borderRadius: '20px',
+                  overflow: 'hidden',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                  transition: 'all 0.3s ease',
+                  animation: `slideUp 0.5s ease-out ${index * 0.05}s both`,
+                  position: 'relative'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-5px)';
+                  e.currentTarget.style.boxShadow = '0 15px 40px rgba(0,0,0,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+                }}
+              >
+                <div style={{
+                  position: 'relative',
+                  paddingBottom: '100%',
+                  background: '#f8f9fa'
+                }}>
+                  {participant.photoUrl ? (
+                    <img
+                      src={participant.photoUrl}
+                      alt={`Participant from ${participant.location}`}
+                      style={{
                         position: 'absolute',
                         top: 0,
                         left: 0,
                         width: '100%',
                         height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-                      }}>
-                        <FaCamera size={50} color="white" />
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div style={{ padding: '15px' }}>
+                        objectFit: 'cover'
+                      }}
+                    />
+                  ) : (
                     <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '6px',
-                      marginBottom: '12px'
+                      justifyContent: 'center',
+                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
                     }}>
-                      <FaMapMarkerAlt style={{ color: '#1e4fa3', fontSize: '12px' }} />
-                      <span style={{
-                        fontSize: '13px',
-                        color: '#1e4fa3',
-                        fontWeight: '500'
-                      }}>
-                        {participant.location}
-                      </span>
+                      <FaCamera size={50} color="white" />
                     </div>
-                    
-                    <button
-                      onClick={() => handleChat(participant)}
-                      disabled={isCurrentUser}
-                      style={{
-                        width: '100%',
-                        background: isCurrentUser ? '#e8eef5' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        color: isCurrentUser ? '#95a5a6' : 'white',
-                        border: 'none',
-                        padding: '10px 16px',
-                        borderRadius: '50px',
-                        cursor: isCurrentUser ? 'not-allowed' : 'pointer',
-                        fontSize: '13px',
-                        fontWeight: '600',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '8px',
-                        transition: 'all 0.3s ease',
-                        opacity: isCurrentUser ? 0.6 : 1
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isCurrentUser) {
-                          e.currentTarget.style.transform = 'scale(1.02)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}
-                    >
-                      <FaComment />
-                      {isCurrentUser ? 'This is You' : 'LINKUPwithME'}
-                    </button>
-                  </div>
+                  )}
                 </div>
-              );
-            })}
+                
+                <div style={{ padding: '15px' }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    marginBottom: '12px'
+                  }}>
+                    <FaMapMarkerAlt style={{ color: '#1e4fa3', fontSize: '12px' }} />
+                    <span style={{
+                      fontSize: '13px',
+                      color: '#1e4fa3',
+                      fontWeight: '500'
+                    }}>
+                      {participant.location}
+                    </span>
+                  </div>
+                  
+                  <button
+                    onClick={() => handleChat(participant)}
+                    style={{
+                      width: '100%',
+                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      color: 'white',
+                      border: 'none',
+                      padding: '10px 16px',
+                      borderRadius: '50px',
+                      cursor: 'pointer',
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.02)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    <FaComment />
+                    LINKUPwithME
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
