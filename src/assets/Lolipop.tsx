@@ -150,7 +150,7 @@ const Lollipop: React.FC = () => {
         animation: 'fadeIn 0.6s ease-out'
       }}>
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+        {/* <div style={{ textAlign: 'center', marginBottom: '30px' }}>
           <h1 style={{
             color: 'white',
             fontSize: 'clamp(28px, 6vw, 36px)',
@@ -167,7 +167,7 @@ const Lollipop: React.FC = () => {
           }}>
             {eventName}
           </p>
-        </div>
+        </div> */}
 
         {/* Main Card */}
         <div style={{
