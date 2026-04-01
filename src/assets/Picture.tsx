@@ -281,7 +281,7 @@ const Picture: React.FC = () => {
             fontSize: 'clamp(16px, 3vw, 20px)',
             animation: !photo ? 'textPulse 1.5s ease-in-out infinite' : 'none'
           }}>
-            {photo ? "Your photo has been saved!" : "📸 (Take a photo to linkup)"}
+            {photo ? "Your photo has been saved!" : "📸 (TAP TO TAKE A SELFIE TO LINKUP)"}
           </p>
 
           {photo && (

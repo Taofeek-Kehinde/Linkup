@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, getDoc, collection, addDoc, query, getDocs, orderBy } from 'firebase/firestore';
-import { FaChevronDown, FaHeart, FaArrowRight } from 'react-icons/fa';
+import { FaChevronDown, FaHeart, FaArrowRight, FaCamera, FaUndo } from 'react-icons/fa';
 
 const Lollipop: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
@@ -10,7 +10,6 @@ const Lollipop: React.FC = () => {
 
   const [locations, setLocations] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState("");
-  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [eventName, setEventName] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -30,7 +29,12 @@ const Lollipop: React.FC = () => {
         const eventDoc = await getDoc(doc(db, "events", eventId));
         if (eventDoc.exists()) {
           const data = eventDoc.data();
-          setLocations(data.locations || []);
+          // Handle both old format (string array) and new format (location details)
+          if (data.locationDetails) {
+            setLocations(data.locationDetails.map((loc: any) => loc.fullLocation));
+          } else {
+            setLocations(data.locations || []);
+          }
           setEventName(data.eventName || "LINK UP Event");
         }
 
@@ -53,13 +57,13 @@ const Lollipop: React.FC = () => {
     fetchEventData();
   }, [eventId, navigate]);
 
+  const handleRetakeSelfie = () => {
+    navigate(`/picture/${eventId}`);
+  };
+
   const handleSubmit = async () => {
     if (!selectedLocation) {
       alert("Please select your location!");
-      return;
-    }
-    if (!selectedChoice) {
-      alert("Please choose between Chocolate or Lollipop!");
       return;
     }
 
@@ -76,12 +80,11 @@ const Lollipop: React.FC = () => {
         photoUrl = querySnapshot.docs[0].data().photoUrl;
       }
 
-      // Save participant choice to Firestore
+      // Save participant data to Firestore
       const participantData = {
         eventId: eventId,
         eventName: eventName,
         location: selectedLocation,
-        choice: selectedChoice,
         photoUrl: photoUrl,
         timestamp: new Date().toISOString(),
         createdAt: new Date()
@@ -110,20 +113,20 @@ const Lollipop: React.FC = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: '#f5f7fb',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         fontFamily: 'system-ui, sans-serif'
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{
             width: '40px',
             height: '40px',
-            border: '3px solid #f5f7fb',
-            borderTopColor: '#1e4fa3',
+            border: '3px solid white',
+            borderTopColor: 'transparent',
             borderRadius: '50%',
             animation: 'spin 0.8s linear infinite',
             margin: '0 auto 20px'
           }} />
-          <p style={{ color: '#1e4fa3' }}>Loading your experience...</p>
+          <p style={{ color: 'white' }}>Loading your experience...</p>
         </div>
       </div>
     );
@@ -132,165 +135,145 @@ const Lollipop: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      // background: '#f5f7fb',
-      // padding: 'clamp(20px, 5vh, 40px) 20px',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 'clamp(20px, 5vh, 40px) 20px',
       fontFamily: 'system-ui, sans-serif'
     }}>
       <div style={{
-        maxWidth: '800px',
+        maxWidth: '500px',
+        width: '100%',
         margin: '0 auto',
         animation: 'fadeIn 0.6s ease-out'
       }}>
-
-   {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
           <h1 style={{
-            color: 'black',
-            fontSize: '22px',
+            color: 'white',
+            fontSize: 'clamp(28px, 6vw, 36px)',
             fontWeight: '700',
-            marginBottom: '10px',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
+            marginBottom: '8px',
+            letterSpacing: '2px'
           }}>
-            🍭 LINK UP
+            LINK UP
           </h1>
-          {/* <p style={{
+          <p style={{
             color: 'rgba(255,255,255,0.9)',
-            fontSize: '20px',
+            fontSize: 'clamp(14px, 3vw, 16px)',
             fontStyle: 'italic'
           }}>
             {eventName}
-          </p> */}
+          </p>
         </div>
 
-        {/* Single Column Layout - Choice Selection Only */}
+        {/* Main Card */}
         <div style={{
-         
+          background: 'white',
+          borderRadius: '32px',
+          padding: 'clamp(25px, 5vw, 35px)',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
           animation: 'slideUp 0.5s ease-out'
         }}>
-
-
-          {/* Choice Options - No Icons, No Text */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr auto 1fr',
-            gap: '5px',
-            marginBottom: '35px'
-          }}>
-
-
-            {/* Chocolate Option - Deep Brown Background */}
-            <div
-  onClick={() => setSelectedChoice('chocolate')}
-  style={{
-    background: '#3E2723', // always brown
-
-    borderRadius: '50%',
-    width: 'clamp(140px, 28vw, 180px)',
-    height: 'clamp(140px, 28vw, 180px)',
-
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-
-    border: selectedChoice === 'chocolate'
-      ? '4px solid #795548'
-      : '2px solid transparent',
-
-    transform: selectedChoice === 'chocolate'
-      ? 'scale(1.08)'
-      : 'scale(1)',
-
-    boxShadow: selectedChoice === 'chocolate'
-      ? '0 10px 25px rgba(62,39,35,0.4)'
-      : '0 6px 15px rgba(0,0,0,0.08)'
-  }}
->
-  <div style={{ fontSize: 'clamp(50px, 10vw, 80px)' }}>
-    🍫
-  </div>
-  </div>
-
-          {/* OR Separator - Gradient Circle */}
-          <div
-            style={{
-              position: 'relative',
-              top: '15px',
-              background: 'linear-gradient(to right, #3E2723 50%, #FFD700 50%)',
-              borderRadius: '50%',
-              width: 'clamp(60px, 12vw, 90px)',
-              height: 'clamp(60px, 12vw, 90px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 'clamp(14px, 3vw, 22px)',
-              fontWeight: 'bold',
-              color: 'white',
-              textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-              boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
-              zIndex: 1
-            }}
-          >
-            OR
-          </div>
-
-            {/* Lollipop Option - Yellow Background */}
-           <div
-  onClick={() => setSelectedChoice('lollipop')}
-  style={{
-    background: '#FFD700', // always yellow
-
-    borderRadius: '50%',
-    width: 'clamp(140px, 28vw, 180px)',
-    height: 'clamp(140px, 28vw, 180px)',
-
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-
-    border: selectedChoice === 'lollipop'
-      ? '4px solid #FF8F00'
-      : '2px solid transparent',
-
-    transform: selectedChoice === 'lollipop'
-      ? 'scale(1.08)'
-      : 'scale(1)',
-
-    boxShadow: selectedChoice === 'lollipop'
-      ? '0 10px 25px rgba(255,193,7,0.4)'
-      : '0 6px 15px rgba(0,0,0,0.08)'
-  }}
->
-  <div style={{ fontSize: 'clamp(50px, 10vw, 80px)' }}>
-    🍭
-  </div>
-</div>
-
-          </div>
-
-          {/* Location Dropdown */}
-          <div style={{ marginBottom: '30px' }}>
-            <label style={{
-              display: 'block',
-              color: '#1e4fa3',
+          
+          {/* Selfie Section */}
+          <div style={{ textAlign: 'center', marginBottom: '25px' }}>
+            <h2 style={{
+              color: '#333',
+              fontSize: 'clamp(18px, 4vw, 22px)',
               fontWeight: '600',
-              marginBottom: '10px',
-              fontSize: '14px'
+              marginBottom: '15px'
             }}>
-              Where are you linking up from?
-            </label>
+              Your Selfie Moment
+            </h2>
+            
+            {/* Photo Circle */}
+            <div
+              style={{
+                width: 'clamp(150px, 40vw, 200px)',
+                height: 'clamp(150px, 40vw, 200px)',
+                borderRadius: '50%',
+                margin: '0 auto 15px',
+                background: '#f0f0f0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease'
+              }}
+              onClick={handleRetakeSelfie}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              {userPhoto ? (
+                <img
+                  src={userPhoto}
+                  alt="Your selfie"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                />
+              ) : (
+                <FaCamera size={50} color="#999" />
+              )}
+            </div>
+            
+            {/* Retake Button */}
+            <button
+              onClick={handleRetakeSelfie}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#1e4fa3',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 16px',
+                borderRadius: '50px',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = '#e8eef5'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+            >
+              <FaUndo size={12} />
+              RETAKE SELFIE
+            </button>
+          </div>
+
+          {/* Divider */}
+          <div style={{
+            height: '1px',
+            background: 'linear-gradient(to right, transparent, #e0e0e0, transparent)',
+            margin: '20px 0'
+          }} />
+
+          {/* Location Section */}
+          <div style={{ marginBottom: '25px' }}>
+            <h3 style={{
+              color: '#333',
+              fontSize: 'clamp(16px, 3.5vw, 18px)',
+              fontWeight: '600',
+              marginBottom: '12px',
+              textAlign: 'center'
+            }}>
+              Where are you linking up?
+            </h3>
+            
             <div style={{ position: 'relative' }}>
               <div
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 style={{
                   padding: '14px 18px',
-                  borderRadius: '12px',
-                  border: '2px solid #e8eef5',
+                  borderRadius: '50px',
+                  border: '2px solid #e0e0e0',
                   fontSize: '16px',
                   background: '#fafcfd',
                   cursor: 'pointer',
@@ -299,9 +282,13 @@ const Lollipop: React.FC = () => {
                   alignItems: 'center',
                   transition: 'all 0.3s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = '#1e4fa3'}
+                onMouseLeave={(e) => {
+                  if (!isDropdownOpen) e.currentTarget.style.borderColor = '#e0e0e0';
+                }}
               >
-                <span style={{ color: selectedLocation ? '#333' : '#7f8c8d' }}>
-                  {selectedLocation || "Tap to select your location"}
+                <span style={{ color: selectedLocation ? '#333' : '#999' }}>
+                  {selectedLocation || "Tap to select your linkup spot"}
                 </span>
                 <FaChevronDown style={{
                   fontSize: '12px',
@@ -331,7 +318,7 @@ const Lollipop: React.FC = () => {
                     left: 0,
                     right: 0,
                     background: 'white',
-                    borderRadius: '12px',
+                    borderRadius: '16px',
                     boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
                     border: '1px solid #e8eef5',
                     maxHeight: '250px',
@@ -381,43 +368,13 @@ const Lollipop: React.FC = () => {
             </div>
           </div>
 
-          {/* User Photo Preview */}
-          {userPhoto && (
-            <div style={{
-              textAlign: 'center',
-              marginBottom: '25px',
-              padding: '15px',
-              background: '#f8f9fa',
-              borderRadius: '12px'
-            }}>
-              <p style={{
-                fontSize: '12px',
-                color: '#7f8c8d',
-                marginBottom: '10px'
-              }}>
-                Your captured moment
-              </p>
-              <img
-                src={userPhoto}
-                alt="Your photo"
-                style={{
-                  width: '80px',
-                  height: '80px',
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  border: '3px solid #1e4fa3'
-                }}
-              />
-            </div>
-          )}
-
-          {/* LINK UP Button - Brown Background */}
+          {/* LINK UP Button */}
           <button
             onClick={handleSubmit}
             disabled={submitting}
             style={{
               width: '100%',
-              background: '#5D4037',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               color: 'white',
               border: 'none',
               padding: '16px 20px',
@@ -430,17 +387,16 @@ const Lollipop: React.FC = () => {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '10px',
-              opacity: submitting ? 0.7 : 1
+              opacity: submitting ? 0.7 : 1,
+              marginTop: '20px'
             }}
             onMouseEnter={(e) => {
               if (!submitting) {
-                e.currentTarget.style.background = '#3E2723';
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
+                e.currentTarget.style.boxShadow = '0 10px 25px rgba(102,126,234,0.4)';
               }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#5D4037';
               e.currentTarget.style.transform = 'translateY(0)';
               e.currentTarget.style.boxShadow = 'none';
             }}
@@ -459,7 +415,7 @@ const Lollipop: React.FC = () => {
               </>
             ) : (
               <>
-                LINK UP
+                LINK UP with Others
                 <FaArrowRight />
               </>
             )}
@@ -468,9 +424,9 @@ const Lollipop: React.FC = () => {
           {/* Motivational Message */}
           <div style={{
             textAlign: 'center',
-            marginTop: '25px',
+            marginTop: '20px',
             padding: '12px',
-            background: 'linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%)',
+            background: '#fef9e6',
             borderRadius: '16px'
           }}>
             <FaHeart style={{ color: '#e74c3c', marginRight: '8px' }} />
