@@ -132,7 +132,7 @@ const Gallery: React.FC = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: '#f5f7fb',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         fontFamily: 'system-ui, sans-serif'
       }}>
         <div style={{ textAlign: 'center' }}>
@@ -154,7 +154,7 @@ const Gallery: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#f5f7fb',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       padding: 'clamp(20px, 5vh, 40px) 20px',
       fontFamily: 'system-ui, sans-serif'
     }}>
@@ -162,7 +162,7 @@ const Gallery: React.FC = () => {
         maxWidth: '1200px',
         margin: '0 auto'
       }}>
-        {/* Header - No Back Button */}
+        {/* Header - CANDY & CLASSY in black */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -172,17 +172,20 @@ const Gallery: React.FC = () => {
         }}>
           <div style={{ textAlign: 'center' }}>
             <h1 style={{
-              color: 'white',
+              color: 'black',
               fontSize: 'clamp(24px, 5vw, 36px)',
               fontWeight: '700',
-              marginBottom: '5px'
+              marginBottom: '5px',
+              letterSpacing: '2px'
             }}>
               CANDY & CLASSY
             </h1>
-         
+            <p style={{ color: 'rgba(0,0,0,0.7)', fontSize: '14px', fontWeight: '500' }}>
+              {eventName}
+            </p>
           </div>
           
-          {/* Location Filter Dropdown - Top Right */}
+          {/* Location Filter Dropdown - Top Right - Black text, no background */}
           <div style={{
             position: 'absolute',
             right: 0,
@@ -192,27 +195,24 @@ const Gallery: React.FC = () => {
               <div
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 style={{
-                  padding: '10px 20px',
-                  borderRadius: '50px',
+                  padding: '8px 0',
                   fontSize: '14px',
-                  background: 'white',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '10px',
+                  gap: '8px',
                   transition: 'all 0.3s ease',
-                  boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+                  color: 'black',
+                  fontWeight: '500'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
-                <FaMapMarkerAlt style={{ color: '#1e4fa3' }} />
-                <span style={{ color: selectedLocation === 'all' ? '#7f8c8d' : '#1e4fa3', fontWeight: selectedLocation !== 'all' ? '500' : 'normal' }}>
+                <FaMapMarkerAlt style={{ color: 'black', fontSize: '14px' }} />
+                <span style={{ color: 'black', fontWeight: '500' }}>
                   {selectedLocation === 'all' ? 'All Locations' : selectedLocation}
                 </span>
                 <FaChevronDown style={{
                   fontSize: '10px',
-                  color: '#1e4fa3',
+                  color: 'black',
                   transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                   transition: 'transform 0.3s ease'
                 }} />
@@ -238,9 +238,9 @@ const Gallery: React.FC = () => {
                     right: 0,
                     minWidth: '200px',
                     background: 'white',
-                    borderRadius: '16px',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-                    border: '1px solid #e8eef5',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                    border: '1px solid #e0e0e0',
                     maxHeight: '300px',
                     overflowY: 'auto',
                     zIndex: 999,
@@ -252,15 +252,14 @@ const Gallery: React.FC = () => {
                         setIsDropdownOpen(false);
                       }}
                       style={{
-                        padding: '12px 18px',
+                        padding: '10px 16px',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
                         fontSize: '14px',
                         color: '#333',
-                        background: selectedLocation === "all" ? '#e8eef5' : 'transparent',
-                        fontWeight: selectedLocation === "all" ? '600' : 'normal'
+                        background: selectedLocation === "all" ? '#f5f5f5' : 'transparent'
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = '#e8eef5'}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#f5f5f5'}
                       onMouseLeave={(e) => {
                         if (selectedLocation !== "all") e.currentTarget.style.background = 'transparent';
                       }}
@@ -275,15 +274,14 @@ const Gallery: React.FC = () => {
                           setIsDropdownOpen(false);
                         }}
                         style={{
-                          padding: '12px 18px',
+                          padding: '10px 16px',
                           cursor: 'pointer',
                           transition: 'all 0.2s ease',
                           fontSize: '14px',
                           color: '#333',
-                          background: selectedLocation === location ? '#e8eef5' : 'transparent',
-                          fontWeight: selectedLocation === location ? '600' : 'normal'
+                          background: selectedLocation === location ? '#f5f5f5' : 'transparent'
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = '#e8eef5'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#f5f5f5'}
                         onMouseLeave={(e) => {
                           if (selectedLocation !== location) e.currentTarget.style.background = 'transparent';
                         }}
@@ -419,7 +417,7 @@ const Gallery: React.FC = () => {
                       color: 'white',
                       border: 'none',
                       padding: '10px 16px',
-                      borderRadius: '10px',
+                      borderRadius: '50px',
                       cursor: 'pointer',
                       fontSize: '13px',
                       fontWeight: '600',
@@ -437,7 +435,7 @@ const Gallery: React.FC = () => {
                     }}
                   >
                     <FaComment />
-                    LINKUP with ME
+                    LINKUPwithME
                   </button>
                 </div>
               </div>
