@@ -5,7 +5,7 @@ import Picture from "./assets/Picture";
 import Lollipop from "./assets/Lolipop";
 import Gallery from "./assets/Gallery";
 import Chat from "./assets/Chat";
-import { AdminLock, LinkupGenerator } from "./admin-lock/admin";
+import {  LinkupGenerator } from "./admin-lock/admin";
 
 const App: React.FC = () => {
   return (
@@ -33,9 +33,7 @@ const App: React.FC = () => {
         <Route 
           path="/admin" 
           element={
-            <AdminLock>
-              <LinkupGenerator />
-            </AdminLock>
+            <LinkupGenerator />
           } 
         />
         

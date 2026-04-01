@@ -1,14 +1,10 @@
-# Task Progress: Add OR between candies in Lollipop selection
+# Admin Password Removal Task
 
-**Approved Plan:**
-- Update src/assets/Lolipop.tsx: Modify grid to 3 columns, add gradient OR circle in middle
-- No other file changes
+## Steps to Complete:
+- [x] Step 1: Create TODO.md with plan breakdown
+- [x] Step 2: Update src/admin-lock/admin.tsx to remove password lock (simplify AdminLock)
+- [x] Step 3: Test admin access (dev server running, /admin direct - no password)
+- [x] Step 4: Mark complete
 
-**Steps:**
-- [x] 1. Create TODO.md with steps
-- [x] 2. Edit src/assets/Lolipop.tsx with exact changes
-- [x] 3. Verify no layout breakage (candies same size/position)
-- [x] 4. Test in dev server
-- [ ] 5. Complete task
 
-✅ Task complete: OR added between candies in src/assets/Lolipop.tsx
+

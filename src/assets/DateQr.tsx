@@ -56,7 +56,7 @@ const DateQr: React.FC = () => {
       }
       
       if (!id) {
-        setError("No event ID found. Please scan a valid QR code.");
+        setError("Create LINKUP for your SHOW/EVENT/SPOT ");
         setLoading(false);
         return;
       }
@@ -205,7 +205,7 @@ const DateQr: React.FC = () => {
             fontSize: 'clamp(16px, 3vw, 22px)',
             marginBottom: '40px'
           }}>
-            in the moment
+            {/* in the moment */}
           </p>
           <div style={{
             background: 'white',
@@ -228,7 +228,7 @@ const DateQr: React.FC = () => {
                 cursor: 'pointer'
               }}
             >
-              Go to Admin
+              Generate QR
             </button>
           </div>
         </div>

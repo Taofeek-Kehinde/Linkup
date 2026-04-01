@@ -6,16 +6,12 @@ import {
   FaTrashAlt, 
   FaMusic, 
   FaQrcode, 
-  FaLock, 
-  FaUnlockAlt,
-  FaEye,
-  FaEyeSlash,
   FaMicrophoneAlt,
   FaMapPin,
   FaInfoCircle,
   FaChevronDown
 } from 'react-icons/fa';
-import { IoMusicalNotes } from 'react-icons/io5';
+// import { IoMusicalNotes } from 'react-icons/io5';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
@@ -33,194 +29,6 @@ interface LocationData {
   id: string;
   name: string;
 }
-
-// interface EventData {
-//   eventName: string;
-//   locations: string[];
-//   createdAt: any;
-//   eventId: string;
-// }
-
-// Admin Lock Component with Encryption
-const AdminLock: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleUnlock = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    const ENCRYPTION_KEY = "2026";
-    if (password === ENCRYPTION_KEY) {
-      setIsAuthenticated(true);
-      setError("");
-    } else {
-      setError("Invalid encryption key. Access denied.");
-    }
-  }, [password]);
-
-  if (!isAuthenticated) {
-    return (
-      <div style={{
-        minHeight: 'auto',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: '#f5f7fb',
-        padding: 'clamp(40px, 8vh, 100px) 20px',
-        fontFamily: 'system-ui, sans-serif'
-      }}>
-        <div style={{
-          textAlign: 'center',
-          width: '100%',
-          maxWidth: '420px',
-          animation: 'fadeIn 1s ease-in-out'
-        }}>
-          <h1 style={{
-            color: '#1e4fa3',
-            letterSpacing: '6px',
-            fontWeight: '700',
-            fontSize: 'clamp(28px, 5vw, 42px)',
-            marginBottom: '5px'
-          }}>
-            LINK UP
-          </h1>
-
-          <p style={{
-            color: '#1e4fa3',
-            fontStyle: 'italic',
-            fontSize: 'clamp(16px, 3vw, 22px)',
-            marginBottom: '40px'
-          }}>
-            in the moment
-          </p>
-          
-          <div style={{
-            background: 'white',
-            width: 'clamp(200px, 65vw, 280px)',
-            height: 'clamp(200px, 65vw, 280px)',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden',
-            padding: '10px',
-            margin: 'auto',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-            animation: 'pulse 2s infinite ease-in-out'
-          }}>
-            <div style={{
-              width: '70%',
-              height: '70%',
-              maxWidth: '180px',
-              maxHeight: '180px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              background: '#e8eef5',
-              borderRadius: '50%'
-            }}>
-              <FaLock style={{ fontSize: 'clamp(60px, 12vw, 100px)', color: '#1e4fa3' }} />
-            </div>
-          </div>
-          
-          <p style={{
-            color: '#1e4fa3',
-            marginTop: '35px',
-            fontSize: 'clamp(16px, 3vw, 20px)',
-            marginBottom: '25px'
-          }}>
-            (Enter master key to unlock)
-          </p>
-          
-          <form onSubmit={handleUnlock} style={{ width: '100%', maxWidth: '300px', margin: '0 auto' }}>
-            <div style={{ position: 'relative', marginBottom: '20px' }}>
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '14px 45px 14px 20px',
-                  border: error ? '2px solid #e74c3c' : '2px solid #d1d9e6',
-                  borderRadius: '50px',
-                  fontSize: '16px',
-                  outline: 'none',
-                  background: 'white',
-                  transition: 'all 0.3s ease',
-                  boxSizing: 'border-box'
-                }}
-                placeholder="Enter master key"
-                autoFocus
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: 'absolute',
-                  right: '15px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontSize: '18px',
-                  color: '#7f8c8d'
-                }}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
-            </div>
-            {error && (
-              <p style={{ color: '#e74c3c', fontSize: '13px', marginTop: '-10px', marginBottom: '15px' }}>
-                ⚠️ {error}
-              </p>
-            )}
-            <button
-              type="submit"
-              style={{
-                width: '100%',
-                background: '#1e4fa3',
-                color: 'white',
-                border: 'none',
-                padding: '14px 20px',
-                borderRadius: '50px',
-                fontSize: '18px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 15px rgba(30, 79, 163, 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.background = '#163d7a'}
-              onMouseLeave={(e) => e.currentTarget.style.background = '#1e4fa3'}
-            >
-              <FaUnlockAlt />
-              Unlock & Access
-            </button>
-          </form>
-        </div>
-
-        <style>{`
-          @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-          }
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
-  return <>{children}</>;
-};
 
 // Custom Dropdown Component
 const CustomSelect: React.FC<{
@@ -429,7 +237,7 @@ const LinkupGenerator: React.FC = () => {
               in the moment
             </p>
           </div>
-          <div style={{
+          {/* <div style={{
             background: 'white',
             padding: '12px',
             borderRadius: '50%',
@@ -439,7 +247,7 @@ const LinkupGenerator: React.FC = () => {
             justifyContent: 'center'
           }}>
             <IoMusicalNotes style={{ fontSize: '28px', color: '#1e4fa3' }} />
-          </div>
+          </div> */}
         </div>
 
         {/* Form Section Only */}
@@ -731,11 +539,6 @@ const LinkupGenerator: React.FC = () => {
       </div>
 
       <style>{`
-        @keyframes pulse {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.05); }
-          100% { transform: scale(1); }
-        }
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
@@ -758,4 +561,4 @@ const LinkupGenerator: React.FC = () => {
   );
 };
 
-export { AdminLock, LinkupGenerator };
+export { LinkupGenerator };
