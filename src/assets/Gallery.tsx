@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
-import { collection, query, orderBy, getDocs, doc, getDoc, where } from 'firebase/firestore';
-import { FaArrowLeft, FaMapMarkerAlt, FaHeart, FaCamera, FaUsers, FaChevronDown, FaComment } from 'react-icons/fa';
+import { collection, query, orderBy, getDocs, doc, getDoc, } from 'firebase/firestore';
+import { FaArrowLeft, FaMapMarkerAlt,  FaCamera, FaUsers, FaChevronDown, FaComment } from 'react-icons/fa';
 
 interface Participant {
   id: string;
