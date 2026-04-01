@@ -9,13 +9,13 @@ import {
   FaMicrophoneAlt,
   FaMapPin,
   FaInfoCircle,
-  FaChevronDown
+  FaCity,
+  FaLocationArrow
 } from 'react-icons/fa';
-// import { IoMusicalNotes } from 'react-icons/io5';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-// Nigeria states array - sorted alphabetically for better organization
+// Nigeria states array - sorted alphabetically
 const NIGERIA_STATES = [
   "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno",
   "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "FCT Abuja", "Gombe", 
@@ -27,11 +27,13 @@ const NIGERIA_STATES = [
 // Types
 interface LocationData {
   id: string;
-  name: string;
+  state: string;
+  specificLocation: string;
+  fullLocation: string;
 }
 
-// Custom Dropdown Component
-const CustomSelect: React.FC<{
+// Custom Dropdown Component for States
+const StateSelect: React.FC<{
   value: string;
   onChange: (value: string) => void;
   options: string[];
@@ -51,7 +53,7 @@ const CustomSelect: React.FC<{
         onClick={() => setIsOpen(!isOpen)}
         style={{
           padding: '14px 18px',
-          borderRadius: '50px',
+          borderRadius: '12px',
           border: '2px solid #e8eef5',
           fontSize: '16px',
           background: '#fafcfd',
@@ -68,12 +70,12 @@ const CustomSelect: React.FC<{
         }}
       >
         <span>{value || placeholder}</span>
-        <FaChevronDown style={{ 
-          fontSize: '12px', 
-          color: '#1e4fa3',
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ 
           transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
           transition: 'transform 0.3s ease'
-        }} />
+        }}>
+          <path d="M2 4L6 8L10 4" stroke="#1e4fa3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
       </div>
       
       {isOpen && (
@@ -96,7 +98,7 @@ const CustomSelect: React.FC<{
             left: 0,
             right: 0,
             background: 'white',
-            borderRadius: '20px',
+            borderRadius: '12px',
             boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
             border: '1px solid #e8eef5',
             maxHeight: '280px',
@@ -107,7 +109,7 @@ const CustomSelect: React.FC<{
             <div style={{
               padding: '8px 0',
               background: '#fafcfd',
-              borderRadius: '20px'
+              borderRadius: '12px'
             }}>
               {options.map((option) => (
                 <div
@@ -143,24 +145,40 @@ const CustomSelect: React.FC<{
 const LinkupGenerator: React.FC = () => {
   const navigate = useNavigate();
   const [eventName, setEventName] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedState, setSelectedState] = useState("");
+  const [specificLocation, setSpecificLocation] = useState("");
   const [locationsList, setLocationsList] = useState<LocationData[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string>("");
 
   const addLocation = useCallback(() => {
-    if (!selectedLocation) return;
-    if (locationsList.some(loc => loc.name === selectedLocation)) {
+    if (!selectedState) {
+      alert("Please select a state!");
+      return;
+    }
+    if (!specificLocation.trim()) {
+      alert("Please enter a specific location!");
+      return;
+    }
+    
+    const fullLocationText = `${specificLocation.trim()}, ${selectedState}`;
+    
+    if (locationsList.some(loc => loc.fullLocation === fullLocationText)) {
       alert("📍 This location has already been added!");
       return;
     }
+    
     const newLocation: LocationData = {
-      id: `${selectedLocation}-${Date.now()}`,
-      name: selectedLocation
+      id: `${fullLocationText}-${Date.now()}`,
+      state: selectedState,
+      specificLocation: specificLocation.trim(),
+      fullLocation: fullLocationText
     };
+    
     setLocationsList(prev => [...prev, newLocation]);
-    setSelectedLocation("");
-  }, [selectedLocation, locationsList]);
+    setSelectedState("");
+    setSpecificLocation("");
+  }, [selectedState, specificLocation, locationsList]);
 
   const removeLocation = useCallback((id: string) => {
     setLocationsList(prev => prev.filter(loc => loc.id !== id));
@@ -183,7 +201,12 @@ const LinkupGenerator: React.FC = () => {
       // Prepare event data for Firebase
       const eventData = {
         eventName: eventName.trim(),
-        locations: locationsList.map(loc => loc.name),
+        locations: locationsList.map(loc => loc.fullLocation),
+        locationDetails: locationsList.map(loc => ({
+          state: loc.state,
+          specificLocation: loc.specificLocation,
+          fullLocation: loc.fullLocation
+        })),
         createdAt: serverTimestamp(),
         totalLocations: locationsList.length
       };
@@ -196,7 +219,7 @@ const LinkupGenerator: React.FC = () => {
       // Store the event ID in sessionStorage to retrieve on the DateQr page
       sessionStorage.setItem('currentEventId', docRef.id);
       sessionStorage.setItem('currentEventName', eventName.trim());
-      sessionStorage.setItem('currentEventLocations', JSON.stringify(locationsList.map(loc => loc.name)));
+      sessionStorage.setItem('currentEventLocations', JSON.stringify(locationsList.map(loc => loc.fullLocation)));
       
       // Redirect to DateQr page with the event ID
       navigate(`/date-qr/${docRef.id}`);
@@ -237,17 +260,6 @@ const LinkupGenerator: React.FC = () => {
               in the moment
             </p>
           </div>
-          {/* <div style={{
-            background: 'white',
-            padding: '12px',
-            borderRadius: '50%',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            <IoMusicalNotes style={{ fontSize: '28px', color: '#1e4fa3' }} />
-          </div> */}
         </div>
 
         {/* Form Section Only */}
@@ -295,7 +307,7 @@ const LinkupGenerator: React.FC = () => {
               style={{
                 width: '100%',
                 padding: '14px 18px',
-                borderRadius: '50px',
+                borderRadius: '12px',
                 border: '2px solid #e8eef5',
                 fontSize: '16px',
                 outline: 'none',
@@ -309,7 +321,7 @@ const LinkupGenerator: React.FC = () => {
             />
           </div>
 
-          {/* Add Location with custom dropdown */}
+          {/* Add Location - Manual Input */}
           <div style={{ marginBottom: '24px' }}>
             <label style={{
               display: 'flex',
@@ -323,37 +335,88 @@ const LinkupGenerator: React.FC = () => {
             }}>
               <FaMapMarkerAlt /> ADD LOCATION(S)
             </label>
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-              <CustomSelect
-                value={selectedLocation}
-                onChange={setSelectedLocation}
+            
+            {/* State Dropdown */}
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                color: '#5f6c80',
+                fontSize: '12px',
+                marginBottom: '6px'
+              }}>
+                <FaCity size={12} /> Select State
+              </label>
+              <StateSelect
+                value={selectedState}
+                onChange={setSelectedState}
                 options={NIGERIA_STATES}
                 placeholder="Select a state in Nigeria"
               />
-              <button
-                onClick={addLocation}
-                style={{
-                  background: '#e8eef5',
-                  color: '#1e4fa3',
-                  border: 'none',
-                  padding: '12px 28px',
-                  borderRadius: '50px',
-                  fontSize: '15px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#d1d9e6'}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#e8eef5'}
-              >
-                <FaPlusCircle /> Add
-              </button>
             </div>
+            
+            {/* Specific Location Input */}
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                color: '#5f6c80',
+                fontSize: '12px',
+                marginBottom: '6px'
+              }}>
+                <FaLocationArrow size={12} /> Specific Location
+              </label>
+              <input
+                type="text"
+                value={specificLocation}
+                onChange={(e) => setSpecificLocation(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '14px 18px',
+                  borderRadius: '12px',
+                  border: '2px solid #e8eef5',
+                  fontSize: '16px',
+                  outline: 'none',
+                  transition: 'all 0.3s ease',
+                  boxSizing: 'border-box',
+                  background: '#fafcfd'
+                }}
+                onFocus={(e) => e.currentTarget.style.borderColor = '#1e4fa3'}
+                onBlur={(e) => e.currentTarget.style.borderColor = '#e8eef5'}
+                placeholder="e.g., Eko Hotel, Victoria Island, Ikeja City Mall, etc."
+              />
+            </div>
+            
+            {/* Add Button */}
+            <button
+              onClick={addLocation}
+              style={{
+                width: '100%',
+                background: '#e8eef5',
+                color: '#1e4fa3',
+                border: 'none',
+                padding: '12px 20px',
+                borderRadius: '12px',
+                fontSize: '15px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                marginTop: '8px'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = '#d1d9e6'}
+              onMouseLeave={(e) => e.currentTarget.style.background = '#e8eef5'}
+            >
+              <FaPlusCircle /> Add Location
+            </button>
+            
             <p style={{ fontSize: '11px', color: '#7f8c8d', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <FaInfoCircle /> Tap the dropdown to select from 37 Nigerian states
+              <FaInfoCircle /> Select a state and enter the specific venue/location
             </p>
           </div>
 
@@ -369,12 +432,12 @@ const LinkupGenerator: React.FC = () => {
               alignItems: 'center',
               gap: '8px'
             }}>
-              <FaMapPin /> Added Locations
+              <FaMapPin /> Added Locations ({locationsList.length})
             </h3>
             {locationsList.length === 0 ? (
               <div style={{
                 background: '#fafcfd',
-                borderRadius: '16px',
+                borderRadius: '12px',
                 padding: '20px',
                 textAlign: 'center',
                 color: '#95a5a6',
@@ -383,24 +446,34 @@ const LinkupGenerator: React.FC = () => {
               }}>
                 No locations added yet
                 <br />
-                <span style={{ fontSize: '11px' }}>Select a state from the dropdown and tap + to add</span>
+                <span style={{ fontSize: '11px' }}>Select a state and enter a specific location, then tap "Add Location"</span>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', maxHeight: '200px', overflowY: 'auto' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', maxHeight: '250px', overflowY: 'auto' }}>
                 {locationsList.map((loc) => (
                   <div
                     key={loc.id}
                     style={{
                       background: '#e8eef5',
-                      borderRadius: '50px',
-                      padding: '8px 14px 8px 20px',
+                      borderRadius: '12px',
+                      padding: '10px 14px 10px 16px',
                       display: 'flex',
                       alignItems: 'center',
+                      justifyContent: 'space-between',
                       gap: '12px',
-                      transition: 'all 0.2s ease'
+                      transition: 'all 0.2s ease',
+                      width: 'calc(100% - 20px)',
+                      flexWrap: 'wrap'
                     }}
                   >
-                    <span style={{ color: '#1e4fa3', fontSize: '14px', fontWeight: '500' }}>{loc.name}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: '600', color: '#1e4fa3', fontSize: '14px' }}>
+                        {loc.specificLocation}
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#7f8c8d', marginTop: '2px' }}>
+                        {loc.state}
+                      </div>
+                    </div>
                     <button
                       onClick={() => removeLocation(loc.id)}
                       style={{
@@ -408,10 +481,10 @@ const LinkupGenerator: React.FC = () => {
                         border: 'none',
                         cursor: 'pointer',
                         color: '#e74c3c',
-                        padding: '4px',
+                        padding: '6px',
                         display: 'flex',
                         alignItems: 'center',
-                        borderRadius: '50%',
+                        borderRadius: '8px',
                         transition: 'all 0.2s ease'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.background = '#fdecea'}
@@ -429,8 +502,8 @@ const LinkupGenerator: React.FC = () => {
           {locationsList.length > 0 && (
             <button
               onClick={() => {
-                const selectElement = document.querySelector('[data-select-trigger]');
-                if (selectElement) (selectElement as HTMLElement).click();
+                const stateSelect = document.querySelector('[data-state-select]');
+                if (stateSelect) (stateSelect as HTMLElement).click();
               }}
               style={{
                 background: 'none',
@@ -454,7 +527,7 @@ const LinkupGenerator: React.FC = () => {
           {/* Tips */}
           <div style={{
             background: '#fef9e6',
-            borderRadius: '16px',
+            borderRadius: '12px',
             padding: '16px 20px',
             marginTop: '10px',
             border: '1px solid #f5e6b8'
@@ -464,8 +537,8 @@ const LinkupGenerator: React.FC = () => {
               <div>
                 <p style={{ fontWeight: '600', color: '#b8860b', fontSize: '13px', marginBottom: '4px' }}>Tips</p>
                 <p style={{ fontSize: '12px', color: '#8b6914', lineHeight: '1.5' }}>
-                  Tap the dropdown to view all 37 Nigerian states. Select multiple locations for your event,
-                  generate QR code to share with your audience.
+                  Select a state from the dropdown, then enter the specific venue or location (e.g., "Eko Hotel, Victoria Island").
+                  Add multiple locations for your event to reach a wider audience.
                 </p>
               </div>
             </div>
@@ -481,7 +554,7 @@ const LinkupGenerator: React.FC = () => {
               color: 'white',
               border: 'none',
               padding: '16px 20px',
-              borderRadius: '50px',
+              borderRadius: '12px',
               fontSize: '18px',
               fontWeight: '600',
               cursor: isGenerating ? 'not-allowed' : 'pointer',
@@ -511,7 +584,7 @@ const LinkupGenerator: React.FC = () => {
                   borderRadius: '50%',
                   animation: 'spin 0.8s linear infinite'
                 }} />
-                Saving to Firebase...
+                Saving...
               </>
             ) : (
               <>
