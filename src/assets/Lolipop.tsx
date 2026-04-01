@@ -134,7 +134,7 @@ const Lollipop: React.FC = () => {
 
   return (
     <div style={{
-      minHeight: '100vh',
+      minHeight: 'auto',
       background: '#f5f7fb',
       display: 'flex',
       alignItems: 'center',
