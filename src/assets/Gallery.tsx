@@ -132,7 +132,7 @@ const Gallery: React.FC = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: '#f5f7fb',
         fontFamily: 'system-ui, sans-serif'
       }}>
         <div style={{ textAlign: 'center' }}>
@@ -177,7 +177,7 @@ const Gallery: React.FC = () => {
               fontWeight: '700',
               marginBottom: '5px'
             }}>
-              LINKUPbyLOCATION
+              CANDY & CLASSY
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px' }}>
               {eventName}
@@ -421,7 +421,7 @@ const Gallery: React.FC = () => {
                       color: 'white',
                       border: 'none',
                       padding: '10px 16px',
-                      borderRadius: '50px',
+                      borderRadius: '10px',
                       cursor: 'pointer',
                       fontSize: '13px',
                       fontWeight: '600',
@@ -439,7 +439,7 @@ const Gallery: React.FC = () => {
                     }}
                   >
                     <FaComment />
-                    LINKUPwithME
+                    LINKUP with ME
                   </button>
                 </div>
               </div>
