@@ -537,8 +537,8 @@ const LinkupGenerator: React.FC = () => {
               <div>
                 <p style={{ fontWeight: '600', color: '#b8860b', fontSize: '13px', marginBottom: '4px' }}>Tips</p>
                 <p style={{ fontSize: '12px', color: '#8b6914', lineHeight: '1.5' }}>
-                  Select a state from the dropdown, then enter the specific venue or location (e.g., "Eko Hotel, Victoria Island").
-                  Add multiple locations for your event to reach a wider audience.
+                  "Add ALL  locations where your SHOW is happening. Generate a QR code for participants to scan at entry OR reservation.
+                   QR expires after 72 hours"
                 </p>
               </div>
             </div>

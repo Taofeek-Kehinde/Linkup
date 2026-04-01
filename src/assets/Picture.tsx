@@ -95,7 +95,7 @@ const Picture: React.FC = () => {
       const photoDocRef = doc(db, `events/${eventId}/photos`, photoId);
       await setDoc(photoDocRef, {
         photoId: photoId,
-        photoUrl: imageDataUrl, // Store base64 directly in Firestore
+        photoUrl: imageDataUrl,
         eventId: eventId,
         eventName: eventName,
         timestamp: new Date().toISOString(),
@@ -109,7 +109,6 @@ const Picture: React.FC = () => {
       await setDoc(eventDocRef, { 
         photoCount: currentCount + 1,
         lastPhotoAt: new Date().toISOString(),
-        // Store photo references in an array for easy access
         photoIds: arrayUnion(photoId)
       }, { merge: true });
 
@@ -193,6 +192,7 @@ const Picture: React.FC = () => {
             in the moment
           </p>
 
+          {/* Animated Glowing Camera Container */}
           <div
             onClick={!photo ? startCamera : undefined}
             style={{
@@ -205,32 +205,83 @@ const Picture: React.FC = () => {
               justifyContent: 'center',
               margin: 'auto',
               boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-              animation: 'pulse 2s infinite ease-in-out',
               cursor: !photo ? 'pointer' : 'default',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              position: 'relative',
+              animation: !photo ? 'glowPulse 2s ease-in-out infinite, pulse 2s infinite ease-in-out' : 'none',
+              transition: 'all 0.3s ease'
             }}
           >
-            {photo ? (
-              <img
-                src={photo}
-                alt="Your photo"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover'
-                }}
-              />
-            ) : (
-              <FiCamera size={80} color="#1e4fa3" />
+            {/* Glowing ring effect */}
+            {!photo && (
+              <>
+                <div style={{
+                  position: 'absolute',
+                  top: '-10px',
+                  left: '-10px',
+                  right: '-10px',
+                  bottom: '-10px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(30,79,163,0.3) 0%, rgba(30,79,163,0) 70%)',
+                  animation: 'glowRing 1.5s ease-in-out infinite'
+                }} />
+                <div style={{
+                  position: 'absolute',
+                  top: '-5px',
+                  left: '-5px',
+                  right: '-5px',
+                  bottom: '-5px',
+                  borderRadius: '50%',
+                  border: '3px solid rgba(30,79,163,0.5)',
+                  animation: 'ringPulse 1.5s ease-in-out infinite'
+                }} />
+              </>
             )}
+            
+            <div style={{
+              width: '70%',
+              height: '70%',
+              maxWidth: '180px',
+              maxHeight: '180px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              background: '#e8eef5',
+              borderRadius: '50%',
+              transition: 'all 0.3s ease',
+              animation: !photo ? 'iconGlow 1.5s ease-in-out infinite' : 'none',
+              boxShadow: !photo ? '0 0 20px rgba(30,79,163,0.5)' : 'none'
+            }}>
+              {photo ? (
+                <img
+                  src={photo}
+                  alt="Your photo"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    borderRadius: '50%'
+                  }}
+                />
+              ) : (
+                <FiCamera 
+                  size={80} 
+                  color="#1e4fa3"
+                  style={{
+                    animation: 'cameraPulse 1.5s ease-in-out infinite'
+                  }}
+                />
+              )}
+            </div>
           </div>
 
           <p style={{
             color: '#1e4fa3',
             marginTop: '35px',
-            fontSize: 'clamp(16px, 3vw, 20px)'
+            fontSize: 'clamp(16px, 3vw, 20px)',
+            animation: !photo ? 'textPulse 1.5s ease-in-out infinite' : 'none'
           }}>
-            {photo ? "Your photo has been saved!" : "(Take a photo to linkup)"}
+            {photo ? "Your photo has been saved!" : "📸 (Take a photo to linkup)"}
           </p>
 
           {photo && (
@@ -309,7 +360,8 @@ const Picture: React.FC = () => {
                 background: "#1e4fa3",
                 color: "white",
                 fontSize: 16,
-                cursor: "pointer"
+                cursor: "pointer",
+                animation: 'buttonGlow 1s ease-in-out infinite'
               }}
             >
               Snap Photo
@@ -334,6 +386,106 @@ const Picture: React.FC = () => {
         
         @keyframes spin {
           to { transform: rotate(360deg); }
+        }
+
+        /* New Glow Animations */
+        @keyframes glowPulse {
+          0% {
+            box-shadow: 0 10px 30px rgba(30, 79, 163, 0.1);
+            transform: scale(1);
+          }
+          50% {
+            box-shadow: 0 10px 50px rgba(30, 79, 163, 0.4);
+            transform: scale(1.02);
+          }
+          100% {
+            box-shadow: 0 10px 30px rgba(30, 79, 163, 0.1);
+            transform: scale(1);
+          }
+        }
+
+        @keyframes glowRing {
+          0% {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          50% {
+            opacity: 0.6;
+            transform: scale(1.05);
+          }
+          100% {
+            opacity: 0;
+            transform: scale(1.1);
+          }
+        }
+
+        @keyframes ringPulse {
+          0% {
+            opacity: 0.3;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.1);
+          }
+          100% {
+            opacity: 0.3;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes iconGlow {
+          0% {
+            box-shadow: 0 0 0 0 rgba(30, 79, 163, 0.4);
+          }
+          50% {
+            box-shadow: 0 0 20px 10px rgba(30, 79, 163, 0.6);
+          }
+          100% {
+            box-shadow: 0 0 0 0 rgba(30, 79, 163, 0.4);
+          }
+        }
+
+        @keyframes cameraPulse {
+          0% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 0px rgba(30, 79, 163, 0));
+          }
+          50% {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 15px rgba(30, 79, 163, 0.8));
+          }
+          100% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 0px rgba(30, 79, 163, 0));
+          }
+        }
+
+        @keyframes textPulse {
+          0% {
+            opacity: 0.7;
+            transform: translateY(0);
+          }
+          50% {
+            opacity: 1;
+            transform: translateY(-2px);
+          }
+          100% {
+            opacity: 0.7;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes buttonGlow {
+          0% {
+            box-shadow: 0 0 0 0 rgba(30, 79, 163, 0.4);
+          }
+          50% {
+            box-shadow: 0 0 20px 5px rgba(30, 79, 163, 0.8);
+          }
+          100% {
+            box-shadow: 0 0 0 0 rgba(30, 79, 163, 0.4);
+          }
         }
       `}</style>
     </>
