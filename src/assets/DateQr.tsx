@@ -150,7 +150,7 @@ const DateQr: React.FC = () => {
   if (loading) {
     return (
       <div style={{
-        minHeight: '100vh',
+        minHeight: 'auto',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -214,7 +214,7 @@ const DateQr: React.FC = () => {
             textAlign: 'center',
             boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
           }}>
-            <h2 style={{ color: '#e74c3c', marginBottom: '10px' }}>No Event Found</h2>
+            {/* <h2 style={{ color: '#e74c3c', marginBottom: '10px' }}>No Event Found</h2> */}
             <p style={{ color: '#7f8c8d' }}>{error}</p>
             <button
               onClick={() => navigate('/admin')}

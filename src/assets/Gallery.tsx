@@ -433,7 +433,7 @@ const Gallery: React.FC = () => {
                     }}
                   >
                     <FaComment />
-                    LINKUPwithME
+                    LINKUP
                   </button>
                 </div>
               </div>
