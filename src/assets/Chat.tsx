@@ -207,14 +207,17 @@ const Chat: React.FC = () => {
           </button>
           
           <div style={{
-            fontSize: '18px',
+            position: 'relative',
+            fontSize: '20px',
             fontWeight: '700',
             color: '#333',
             letterSpacing: '1px',
-            textAlign: 'center'
+            textAlign: 'center',
+            top: '8px'
           }}>
             TALKING STAGE
           </div>
+
           
           <div style={{
             fontSize: '14px',
@@ -229,7 +232,8 @@ const Chat: React.FC = () => {
         {/* Candy&Classy under it */}
         <div style={{
           textAlign: 'center',
-          marginBottom: '16px'
+          marginBottom: '12px',
+          marginTop: '8px'
         }}>
           <span style={{
             fontSize: '13px',
@@ -241,6 +245,7 @@ const Chat: React.FC = () => {
             (Candy&Classy)
           </span>
         </div>
+
 
         {/* Timer */}
         <div style={{
