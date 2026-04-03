@@ -207,7 +207,7 @@ const Chat: React.FC = () => {
             fontSize: '13px',
             fontWeight: '600',
             color: '#333',
-            background: '#f0f0f0',
+            // background: '#f0f0f0',
             padding: '4px 12px',
             borderRadius: '50px'
           }}>
@@ -216,37 +216,45 @@ const Chat: React.FC = () => {
         </div>
 
        {/* Time Left with border-radius and box-shadow */}
-<div style={{
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '12px 20px',
-  background: 'white',
-  borderRadius: '50px',
-  boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
-  border: '1px solid #e8eef5',
-  width: 'fit-content',
-  margin: '25px auto 0 auto', // pushes it down
-  flexDirection: 'column' // stack timer and text vertically
-}}>
-  <div style={{
-    fontSize: '20px',
-    fontWeight: '700',
-    color: '#000',
-    fontFamily: 'monospace',
-    letterSpacing: '2px'
-  }}>
+  {/* Timer with border-radius and box-shadow */}
+<div
+  style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '12px 20px',
+    background: 'white',
+    borderRadius: '50px',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
+    border: '1px solid #e8eef5',
+    width: 'fit-content',
+    margin: '25px auto 0 auto' // moves the timer down
+  }}
+>
+  <div
+    style={{
+      fontSize: '20px',
+      fontWeight: '700',
+      color: '#000',
+      fontFamily: 'monospace',
+      letterSpacing: '2px'
+    }}
+  >
     {formatTime(timeLeft)}
   </div>
+</div>
 
-  <span style={{
-    fontSize: '11px',
+{/* Time Left text under the timer container */}
+<div
+  style={{
+    textAlign: 'center',
+    fontSize: '12px',
     color: '#7f8c8d',
-    marginTop: '3px',
+    marginTop: '6px',
     fontWeight: '500'
-  }}>
-    Time Left
-  </span>
+  }}
+>
+  Time Left
 </div>
 </div>
 
