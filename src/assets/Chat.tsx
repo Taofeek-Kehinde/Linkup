@@ -422,16 +422,29 @@ const Chat: React.FC = () => {
                       width: '32px',
                       height: '32px',
                       borderRadius: '50%',
-                      background: '#1e4fa3',
+                      background: '#e8eef5',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: 'white',
+                      overflow: 'hidden',
                       flexShrink: 0
                     }}>
-                      <FaUserCircle size={32} />
+                      {participantPhoto ? (
+                        <img 
+                          src={participantPhoto} 
+                          alt="You" 
+                          style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            objectFit: 'cover' 
+                          }} 
+                        />
+                      ) : (
+                        <FaUserCircle size={32} color="#1e4fa3" />
+                      )}
                     </div>
                   )}
+
                 </div>
               </div>
             ))}
