@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
-import { FaChevronLeft, FaPaperPlane, FaCamera, FaUserCircle } from 'react-icons/fa';
+import { FaChevronLeft, FaShare, FaCamera, FaUserCircle } from 'react-icons/fa';
 
 interface Message {
   id: string;
@@ -481,7 +481,7 @@ const Chat: React.FC = () => {
               transition: 'all 0.3s ease'
             }}
           >
-            <FaPaperPlane />
+           <FaShare />
           </button>
         </div>
       </div>
