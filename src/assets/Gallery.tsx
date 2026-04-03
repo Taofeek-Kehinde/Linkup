@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
-import { FaMapMarkerAlt, FaCamera, FaChevronDown, FaComment, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaCamera, FaChevronDown, FaComment } from 'react-icons/fa';
 
 interface Participant {
   id: string;
@@ -313,135 +313,138 @@ const Gallery: React.FC = () => {
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '12px',
-            position: 'relative',
-            textAlign: 'center'
+            position: 'relative'
           }}
         >
-          <h1
-            style={{
-              color: 'white',
-              fontSize: 'clamp(24px, 5vw, 32px)',
-              fontWeight: '700',
-              margin: 0,
-              letterSpacing: '2px',
-              textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
-            }}
-          >
-            CANDY & CLASSY
-          </h1>
-
-          {/* Location Filter */}
-          <div style={{ position: 'relative' }}>
-            <div
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          <div style={{ textAlign: 'center' }}>
+            <h1
               style={{
-                padding: '10px 16px',
-                fontSize: '14px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                transition: 'all 0.3s ease',
                 color: 'white',
-                fontWeight: '500',
-                textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-                background: 'rgba(255,255,255,0.1)',
-                borderRadius: '25px',
-                backdropFilter: 'blur(10px)'
+                fontSize: 'clamp(24px, 5vw, 32px)',
+                fontWeight: '700',
+                margin: 0,
+                letterSpacing: '2px',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
               }}
             >
-              <FaMapMarkerAlt style={{ color: 'white', fontSize: '14px' }} />
-              <span style={{ color: 'white', fontWeight: '500' }}>
-                {selectedLocation === 'all' ? 'All Locations' : selectedLocation}
-              </span>
-              <FaChevronDown
-                style={{
-                  fontSize: '10px',
-                  color: 'white',
-                  transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: 'transform 0.3s ease'
-                }}
-              />
-            </div>
+              CANDY & CLASSY
+            </h1>
+          </div>
 
-            {isDropdownOpen && (
-              <>
-                <div
-                  onClick={() => setIsDropdownOpen(false)}
+          {/* Location Filter */}
+          <div
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: 0
+            }}
+          >
+            <div style={{ position: 'relative' }}>
+              <div
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                style={{
+                  padding: '8px 0',
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  transition: 'all 0.3s ease',
+                  color: 'white',
+                  fontWeight: '500',
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
+                }}
+              >
+                <FaMapMarkerAlt style={{ color: 'white', fontSize: '14px' }} />
+                <span style={{ color: 'white', fontWeight: '500' }}>
+                  {selectedLocation === 'all' ? 'All Locations' : selectedLocation}
+                </span>
+                <FaChevronDown
                   style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    zIndex: 998,
-                    background: 'transparent'
+                    fontSize: '10px',
+                    color: 'white',
+                    transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.3s ease'
                   }}
                 />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 'calc(100% + 8px)',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    minWidth: '220px',
-                    background: 'white',
-                    borderRadius: '12px',
-                    boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    maxHeight: '300px',
-                    overflowY: 'auto',
-                    zIndex: 999,
-                    animation: 'dropdownFadeIn 0.2s ease-out'
-                  }}
-                >
+              </div>
+
+              {isDropdownOpen && (
+                <>
                   <div
-                    onClick={() => {
-                      setSelectedLocation('all');
-                      setIsDropdownOpen(false);
-                    }}
+                    onClick={() => setIsDropdownOpen(false)}
                     style={{
-                      padding: '12px 16px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      fontSize: '14px',
-                      color: '#333',
-                      background: selectedLocation === 'all' ? '#f0f8ff' : 'transparent'
+                      position: 'fixed',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      zIndex: 998,
+                      background: 'transparent'
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 'calc(100% + 8px)',
+                      right: 0,
+                      minWidth: '200px',
+                      background: 'white',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                      border: '1px solid #e0e0e0',
+                      maxHeight: '300px',
+                      overflowY: 'auto',
+                      zIndex: 999,
+                      animation: 'dropdownFadeIn 0.2s ease-out'
                     }}
                   >
-                    🌍 All Locations
-                  </div>
-                  {locations.map((location) => (
                     <div
-                      key={location}
                       onClick={() => {
-                        setSelectedLocation(location);
+                        setSelectedLocation('all');
                         setIsDropdownOpen(false);
                       }}
                       style={{
-                        padding: '12px 16px',
+                        padding: '10px 16px',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
                         fontSize: '14px',
                         color: '#333',
-                        background: selectedLocation === location ? '#f0f8ff' : 'transparent'
+                        background: selectedLocation === 'all' ? '#f5f5f5' : 'transparent'
                       }}
                     >
-                      📍 {location}
+                      🌍 All Locations
                     </div>
-                  ))}
-                </div>
-              </>
-            )}
+                    {locations.map((location) => (
+                      <div
+                        key={location}
+                        onClick={() => {
+                          setSelectedLocation(location);
+                          setIsDropdownOpen(false);
+                        }}
+                        style={{
+                          padding: '10px 16px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                          fontSize: '14px',
+                          color: '#333',
+                          background: selectedLocation === location ? '#f5f5f5' : 'transparent'
+                        }}
+                      >
+                        📍 {location}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Section */}
+      {/* Bottom Section with LINKUP Button */}
       <div
         style={{
           position: 'absolute',
@@ -476,7 +479,7 @@ const Gallery: React.FC = () => {
           </span>
         </div>
 
-        {/* LINKUP Button */}
+        {/* LINKUP Button - Navigates to Chat */}
         <button
           onClick={() => handleChat(currentParticipant)}
           style={{
@@ -509,67 +512,6 @@ const Gallery: React.FC = () => {
         </button>
       </div>
 
-      {/* Navigation Arrows */}
-      {currentIndex > 0 && (
-        <button
-          onClick={goToPrevious}
-          style={{
-            position: 'absolute',
-            left: '15px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'rgba(255,255,255,0.3)',
-            border: 'none',
-            width: '45px',
-            height: '45px',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontSize: '22px',
-            backdropFilter: 'blur(5px)',
-            zIndex: 10,
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.5)')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.3)')}
-        >
-          <FaChevronLeft />
-        </button>
-      )}
-
-      {currentIndex < filteredParticipants.length - 1 && (
-        <button
-          onClick={goToNext}
-          style={{
-            position: 'absolute',
-            right: '15px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'rgba(255,255,255,0.3)',
-            border: 'none',
-            width: '45px',
-            height: '45px',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontSize: '22px',
-            backdropFilter: 'blur(5px)',
-            zIndex: 10,
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.5)')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.3)')}
-        >
-          <FaChevronRight />
-        </button>
-      )}
-
       {/* Page Counter */}
       <div
         style={{
@@ -589,7 +531,7 @@ const Gallery: React.FC = () => {
         {currentIndex + 1} / {filteredParticipants.length}
       </div>
 
-      {/* Swipe Instruction - Only show on mobile */}
+      {/* Swipe Instruction */}
       <div
         style={{
           position: 'absolute',
@@ -601,8 +543,7 @@ const Gallery: React.FC = () => {
           textAlign: 'center',
           pointerEvents: 'none',
           zIndex: 10,
-          whiteSpace: 'nowrap',
-          display: 'block'
+          whiteSpace: 'nowrap'
         }}
       >
         ↑ Swipe up/down to browse ↓
