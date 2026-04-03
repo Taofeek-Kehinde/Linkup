@@ -433,13 +433,21 @@ const Chat: React.FC = () => {
         padding: '12px 16px',
         borderTop: '1px solid #e8eef5',
         position: 'sticky',
-        bottom: 0
+        bottom: 0,
+        overflowX: 'hidden',
+        width: '100%'
       }}>
+
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '12px'
+          gap: '12px',
+          overflow: 'hidden',
+          width: '100%',
+          maxWidth: '100%',
+          flexWrap: 'nowrap'
         }}>
+
           {/* Camera Icon - Left */}
           <button
             onClick={takePhoto}
@@ -477,14 +485,20 @@ const Chat: React.FC = () => {
             placeholder="Say Something..."
             style={{
               flex: 1,
-              padding: '12px 16px',
+              minWidth: 0,
+              padding: '12px 12px',
               borderRadius: '25px',
               border: '1px solid #e0e0e0',
               fontSize: '14px',
               outline: 'none',
               transition: 'all 0.3s ease',
-              background: '#f5f7fb'
+              background: '#f5f7fb',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              boxSizing: 'border-box'
             }}
+
             onFocus={(e) => e.currentTarget.style.borderColor = '#1e4fa3'}
             onBlur={(e) => e.currentTarget.style.borderColor = '#e0e0e0'}
           />
