@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
-import { FaArrowLeft, FaPaperPlane, FaCamera, FaUserCircle } from 'react-icons/fa';
+import { FaChevronLeft, FaPaperPlane, FaCamera, FaUserCircle } from 'react-icons/fa';
 
 interface Message {
   id: string;
@@ -162,20 +162,23 @@ const Chat: React.FC = () => {
           justifyContent: 'space-between',
           marginBottom: '12px'
         }}>
-          <button
-            onClick={() => navigate(`/gallery/${eventId}`)}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '20px',
-              color: '#1e4fa3',
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            <FaArrowLeft />
-          </button>
+
+<button
+  onClick={() => navigate(`/gallery/${eventId}`)}
+  style={{
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '20px',
+    color: '#1e4fa3',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px'
+  }}
+>
+  <FaChevronLeft />
+  LINKUP
+</button>
           
           <div style={{
             fontSize: '16px',
@@ -212,38 +215,40 @@ const Chat: React.FC = () => {
           </span>
         </div>
 
-        {/* Time Left with border-radius and box-shadow */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '12px 20px',
-          background: 'white',
-          borderRadius: '50px',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
-          border: '1px solid #e8eef5',
-          width: 'fit-content',
-          margin: '0 auto'
-        }}>
-          <div style={{
-            fontSize: '20px',
-            fontWeight: '700',
-            color: '#e74c3c',
-            fontFamily: 'monospace',
-            letterSpacing: '2px'
-          }}>
-            {formatTime(timeLeft)}
-          </div>
-          <span style={{
-            fontSize: '11px',
-            color: '#7f8c8d',
-            marginLeft: '8px',
-            fontWeight: '500'
-          }}>
-            TimeLeft
-          </span>
-        </div>
-      </div>
+       {/* Time Left with border-radius and box-shadow */}
+<div style={{
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '12px 20px',
+  background: 'white',
+  borderRadius: '50px',
+  boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
+  border: '1px solid #e8eef5',
+  width: 'fit-content',
+  margin: '25px auto 0 auto', // pushes it down
+  flexDirection: 'column' // stack timer and text vertically
+}}>
+  <div style={{
+    fontSize: '20px',
+    fontWeight: '700',
+    color: '#000',
+    fontFamily: 'monospace',
+    letterSpacing: '2px'
+  }}>
+    {formatTime(timeLeft)}
+  </div>
+
+  <span style={{
+    fontSize: '11px',
+    color: '#7f8c8d',
+    marginTop: '3px',
+    fontWeight: '500'
+  }}>
+    Time Left
+  </span>
+</div>
+</div>
 
       {/* Person Profile Picture */}
       <div style={{
