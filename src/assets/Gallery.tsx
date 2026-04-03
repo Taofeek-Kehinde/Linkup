@@ -310,11 +310,12 @@ const Gallery: React.FC = () => {
           flexShrink: 0
         }}
       >
-        <div
+<div
           style={{
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            gap: '12px',
             position: 'relative'
           }}
         >
@@ -333,77 +334,92 @@ const Gallery: React.FC = () => {
             </h1>
           </div>
 
-          {/* Location Filter */}
-          <div
-            style={{
-              position: 'absolute',
-              right: 0,
-              top: 0
-            }}
-          >
-            <div style={{ position: 'relative' }}>
-              <div
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          {/* Location Filter - Now centered below title */}
+          <div style={{ position: 'relative' }}>
+            <div
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              style={{
+                padding: '8px 16px',
+                fontSize: '14px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.3s ease',
+                color: 'white',
+                fontWeight: '500',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                background: 'rgba(255,255,255,0.1)',
+                borderRadius: '20px',
+                backdropFilter: 'blur(10px)'
+              }}
+            >
+              <FaMapMarkerAlt style={{ color: 'white', fontSize: '14px' }} />
+              <span style={{ color: 'white', fontWeight: '500' }}>
+                {selectedLocation === 'all' ? 'All Locations' : selectedLocation}
+              </span>
+              <FaChevronDown
                 style={{
-                  padding: '8px 0',
-                  fontSize: '14px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  transition: 'all 0.3s ease',
+                  fontSize: '10px',
                   color: 'white',
-                  fontWeight: '500',
-                  textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
+                  transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.3s ease'
                 }}
-              >
-                <FaMapMarkerAlt style={{ color: 'white', fontSize: '14px' }} />
-                <span style={{ color: 'white', fontWeight: '500' }}>
-                  {selectedLocation === 'all' ? 'All Locations' : selectedLocation}
-                </span>
-                <FaChevronDown
+              />
+            </div>
+
+            {isDropdownOpen && (
+              <>
+                <div
+                  onClick={() => setIsDropdownOpen(false)}
                   style={{
-                    fontSize: '10px',
-                    color: 'white',
-                    transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                    transition: 'transform 0.3s ease'
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 998,
+                    background: 'transparent'
                   }}
                 />
-              </div>
-
-              {isDropdownOpen && (
-                <>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 8px)',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    minWidth: '200px',
+                    background: 'white',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                    border: '1px solid #e0e0e0',
+                    maxHeight: '300px',
+                    overflowY: 'auto',
+                    zIndex: 999,
+                    animation: 'dropdownFadeIn 0.2s ease-out'
+                  }}
+                >
                   <div
-                    onClick={() => setIsDropdownOpen(false)}
-                    style={{
-                      position: 'fixed',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      zIndex: 998,
-                      background: 'transparent'
+                    onClick={() => {
+                      setSelectedLocation('all');
+                      setIsDropdownOpen(false);
                     }}
-                  />
-                  <div
                     style={{
-                      position: 'absolute',
-                      top: 'calc(100% + 8px)',
-                      right: 0,
-                      minWidth: '200px',
-                      background: 'white',
-                      borderRadius: '8px',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                      border: '1px solid #e0e0e0',
-                      maxHeight: '300px',
-                      overflowY: 'auto',
-                      zIndex: 999,
-                      animation: 'dropdownFadeIn 0.2s ease-out'
+                      padding: '10px 16px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      fontSize: '14px',
+                      color: '#333',
+                      background: selectedLocation === 'all' ? '#f5f5f5' : 'transparent'
                     }}
                   >
+                    🌍 All Locations
+                  </div>
+                  {locations.map((location) => (
                     <div
+                      key={location}
                       onClick={() => {
-                        setSelectedLocation('all');
+                        setSelectedLocation(location);
                         setIsDropdownOpen(false);
                       }}
                       style={{
@@ -412,34 +428,15 @@ const Gallery: React.FC = () => {
                         transition: 'all 0.2s ease',
                         fontSize: '14px',
                         color: '#333',
-                        background: selectedLocation === 'all' ? '#f5f5f5' : 'transparent'
+                        background: selectedLocation === location ? '#f5f5f5' : 'transparent'
                       }}
                     >
-                      🌍 All Locations
+                      📍 {location}
                     </div>
-                    {locations.map((location) => (
-                      <div
-                        key={location}
-                        onClick={() => {
-                          setSelectedLocation(location);
-                          setIsDropdownOpen(false);
-                        }}
-                        style={{
-                          padding: '10px 16px',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s ease',
-                          fontSize: '14px',
-                          color: '#333',
-                          background: selectedLocation === location ? '#f5f5f5' : 'transparent'
-                        }}
-                      >
-                        📍 {location}
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -512,7 +509,7 @@ const Gallery: React.FC = () => {
           }}
         >
           <FaComment style={{ marginRight: '10px', verticalAlign: 'middle' }} />
-          LINKUPwithME
+          LINKUP
         </button>
       </div>
 
