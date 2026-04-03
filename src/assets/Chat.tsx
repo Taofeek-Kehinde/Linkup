@@ -20,7 +20,8 @@ const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [timeLeft, setTimeLeft] = useState(15 * 60 * 60); // 15 hours in seconds
+  const [timeLeft, setTimeLeft] = useState(0); // Computed remaining seconds
+  const [isExpired, setIsExpired] = useState(false);
   const [sendingImage, setSendingImage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -34,19 +35,40 @@ const Chat: React.FC = () => {
       setParticipantLocation(location.state.participantLocation || "Delta, Agbor");
     }
 
-    // Timer countdown
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    // Persistent Timer - 15 hours from first chat open
+    const chatKey = `chatTimer_${eventId}_${participantId}`;
+    const TOTAL_DURATION = 15 * 60 * 60 * 1000; // 15 hours in ms
 
-    return () => clearInterval(timer);
-  }, []);
+    // Load or set start time
+    let startTime = localStorage.getItem(chatKey);
+    if (!startTime) {
+      const now = Date.now();
+      localStorage.setItem(chatKey, now.toString());
+      startTime = now.toString();
+    }
+
+    const startTimestamp = parseInt(startTime);
+    const updateTimer = () => {
+      const elapsed = Date.now() - startTimestamp;
+      const remainingMs = TOTAL_DURATION - elapsed;
+      
+      if (remainingMs <= 0) {
+        setTimeLeft(0);
+        setIsExpired(true);
+        localStorage.removeItem(chatKey);
+      } else {
+        setTimeLeft(Math.floor(remainingMs / 1000));
+      }
+    };
+
+    // Initial update
+    updateTimer();
+    
+    // Update every second (precise, no drift)
+    const interval = setInterval(updateTimer, 1000);
+
+    return () => clearInterval(interval);
+  }, [eventId, participantId]);
 
   // Format time display
   const formatTime = (seconds: number) => {
@@ -84,7 +106,10 @@ const Chat: React.FC = () => {
   }, [eventId, participantId]);
 
   const sendMessage = async () => {
-    if (!newMessage.trim()) return;
+    if (isExpired || timeLeft <= 0 || !newMessage.trim()) {
+      alert("Chat session has expired!");
+      return;
+    }
 
     const chatId = [eventId, participantId].sort().join('_');
     const messagesRef = collection(db, `chats/${chatId}/messages`);
@@ -239,12 +264,12 @@ const Chat: React.FC = () => {
     style={{
       fontSize: '20px',
       fontWeight: '700',
-      color: '#000',
+      color: timeLeft <= 0 ? '#e74c3c' : '#000',
       fontFamily: 'monospace',
       letterSpacing: '2px'
     }}
   >
-    {formatTime(timeLeft)}
+    {timeLeft <= 0 ? 'EXPIRED' : formatTime(timeLeft)}
   </div>
 </div>
 
