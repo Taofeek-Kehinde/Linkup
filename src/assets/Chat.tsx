@@ -155,7 +155,7 @@ const Chat: React.FC = () => {
         top: 0,
         zIndex: 100
       }}>
-        {/* Top Row: Back Arrow, TALKING STAGE, LINKS */}
+        Top Row: Back Arrow, TALKING STAGE, LINKS
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -180,14 +180,18 @@ const Chat: React.FC = () => {
   LINKUP
 </button>
           
-          <div style={{
-            fontSize: '16px',
-            fontWeight: '600',
-            color: '#333',
-            letterSpacing: '1px'
-          }}>
-            TALKING STAGE
-          </div>
+          <div
+  style={{
+    fontSize: '22px',       // bigger text
+    fontWeight: '700',      // bolder
+    color: '#333',
+    letterSpacing: '1px',
+    textAlign: 'center',    // center horizontally
+    marginTop: '30px'       // pushes it down
+  }}
+>
+  TALKING STAGE
+</div>
           
           <div style={{
             fontSize: '14px',
