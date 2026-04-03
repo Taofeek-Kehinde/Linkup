@@ -220,7 +220,7 @@ const Chat: React.FC = () => {
             TALKING STAGE
           </div>          
           <div 
-  onClick={() => navigate(`/AllChat/${eventId}`)}
+   onClick={() => navigate(`/all-chats/${eventId}`)}
   style={{
     fontSize: '14px',
     fontWeight: '500',
