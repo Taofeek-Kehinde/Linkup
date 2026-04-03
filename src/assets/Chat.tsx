@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
-import { FaArrowLeft, FaPaperPlane, FaMicrophone, FaCamera, FaStop, FaUserCircle, FaEllipsisH } from 'react-icons/fa';
+import { FaArrowLeft, FaPaperPlane, FaCamera, FaUserCircle } from 'react-icons/fa';
 
 interface Message {
   id: string;
@@ -21,23 +21,17 @@ const Chat: React.FC = () => {
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState(15 * 60 * 60); // 15 hours in seconds
-  const [isRecording, setIsRecording] = useState(false);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [sendingImage, setSendingImage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [, setParticipantName] = useState("");
   const [participantPhoto, setParticipantPhoto] = useState("");
-  const [, setEventTitle] = useState("");
   const [participantLocation, setParticipantLocation] = useState("");
 
   useEffect(() => {
     // Get participant info from location state
     if (location.state) {
-      setParticipantName(location.state.participantName || "LINKUP User");
       setParticipantPhoto(location.state.participantPhoto || "");
-      setEventTitle(location.state.eventName || "LINK UP Event");
-      setParticipantLocation(location.state.participantLocation || "Location");
+      setParticipantLocation(location.state.participantLocation || "Delta, Agbor");
     }
 
     // Timer countdown
@@ -109,54 +103,6 @@ const Chat: React.FC = () => {
     }
   };
 
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
-      const chunks: Blob[] = [];
-
-      recorder.ondataavailable = (e) => {
-        chunks.push(e.data);
-      };
-
-      recorder.onstop = async () => {
-        const audioBlob = new Blob(chunks, { type: 'audio/webm' });
-        
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-          const base64Audio = reader.result as string;
-          
-          const chatId = [eventId, participantId].sort().join('_');
-          const messagesRef = collection(db, `chats/${chatId}/messages`);
-          
-          await addDoc(messagesRef, {
-            text: "🎤 Voice message",
-            audioUrl: base64Audio,
-            senderId: "currentUser",
-            timestamp: serverTimestamp()
-          });
-        };
-        reader.readAsDataURL(audioBlob);
-        
-        stream.getTracks().forEach(track => track.stop());
-      };
-
-      recorder.start();
-      setMediaRecorder(recorder);
-      setIsRecording(true);
-    } catch (err) {
-      console.error("Error accessing microphone:", err);
-      alert("Unable to access microphone. Please check permissions.");
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorder && isRecording) {
-      mediaRecorder.stop();
-      setIsRecording(false);
-    }
-  };
-
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -200,19 +146,21 @@ const Chat: React.FC = () => {
       flexDirection: 'column',
       fontFamily: 'system-ui, sans-serif'
     }}>
-      {/* Header - Exactly as in image */}
+      {/* Header */}
       <div style={{
         background: 'white',
-        padding: '12px 16px',
+        padding: '16px',
         borderBottom: '1px solid #e8eef5',
         position: 'sticky',
         top: 0,
         zIndex: 100
       }}>
+        {/* Top Row: Back Arrow, TALKING STAGE, LINKS */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          marginBottom: '12px'
         }}>
           <button
             onClick={() => navigate(`/gallery/${eventId}`)}
@@ -229,39 +177,28 @@ const Chat: React.FC = () => {
             <FaArrowLeft />
           </button>
           
-          <div style={{ textAlign: 'center' }}>
-            <h1 style={{ 
-              fontSize: '18px', 
-              margin: 0, 
-              color: '#1e4fa3',
-              fontWeight: '600',
-              letterSpacing: '1px'
-            }}>
-              <FaEllipsisH style={{ fontSize: '14px', marginRight: '4px', display: 'inline' }} />
-              LINKUP
-              <FaEllipsisH style={{ fontSize: '14px', marginLeft: '4px', display: 'inline' }} />
-            </h1>
-            <p style={{ 
-              fontSize: '11px', 
-              margin: '2px 0 0', 
-              color: '#7f8c8d',
-              fontWeight: '500'
-            }}>
-              LINKS • TALKINGSTAGE
-            </p>
+          <div style={{
+            fontSize: '16px',
+            fontWeight: '600',
+            color: '#333',
+            letterSpacing: '1px'
+          }}>
+            TALKING STAGE
           </div>
           
-          <div style={{ width: '24px' }} />
+          <div style={{
+            fontSize: '14px',
+            fontWeight: '500',
+            color: '#1e4fa3'
+          }}>
+            LINKS
+          </div>
         </div>
         
-        {/* Event Name and Location Row */}
+        {/* Candy&Classy under it */}
         <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-          marginTop: '8px',
-          flexWrap: 'wrap'
+          textAlign: 'center',
+          marginBottom: '16px'
         }}>
           <span style={{
             fontSize: '13px',
@@ -273,42 +210,76 @@ const Chat: React.FC = () => {
           }}>
             (Candy&Classy)
           </span>
-          <span style={{
-            fontSize: '12px',
-            color: '#7f8c8d'
+        </div>
+
+        {/* Time Left with border-radius and box-shadow */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '12px 20px',
+          background: 'white',
+          borderRadius: '50px',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
+          border: '1px solid #e8eef5',
+          width: 'fit-content',
+          margin: '0 auto'
+        }}>
+          <div style={{
+            fontSize: '20px',
+            fontWeight: '700',
+            color: '#e74c3c',
+            fontFamily: 'monospace',
+            letterSpacing: '2px'
           }}>
-            {participantLocation}
+            {formatTime(timeLeft)}
+          </div>
+          <span style={{
+            fontSize: '11px',
+            color: '#7f8c8d',
+            marginLeft: '8px',
+            fontWeight: '500'
+          }}>
+            TimeLeft
           </span>
         </div>
       </div>
 
-      {/* Timer Display - Centered with TimeLeft */}
+      {/* Person Profile Picture */}
       <div style={{
         display: 'flex',
-        justifyContent: 'center',
+        flexDirection: 'column',
         alignItems: 'center',
-        padding: '16px',
+        padding: '20px',
         background: 'white',
-        margin: '0',
         borderBottom: '1px solid #e8eef5'
       }}>
         <div style={{
-          fontSize: '28px',
-          fontWeight: '700',
-          color: '#e74c3c',
-          fontFamily: 'monospace',
-          letterSpacing: '2px'
+          width: '80px',
+          height: '80px',
+          borderRadius: '50%',
+          background: '#e8eef5',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          marginBottom: '8px'
         }}>
-          ({formatTime(timeLeft)})
+          {participantPhoto ? (
+            <img src={participantPhoto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          ) : (
+            <FaUserCircle size={80} color="#1e4fa3" />
+          )}
         </div>
-        <span style={{
-          fontSize: '12px',
-          color: '#7f8c8d',
-          marginLeft: '8px',
-          fontWeight: '500'
+        {/* Location under the picture */}
+        <div style={{
+          fontSize: '14px',
+          color: '#1e4fa3',
+          fontWeight: '500',
+          textAlign: 'center'
         }}>
-          TimeLeft
-        </span>
+          {participantLocation}
+        </div>
       </div>
 
       {/* Messages Container */}
@@ -385,15 +356,9 @@ const Chat: React.FC = () => {
                         onClick={() => window.open(message.imageUrl, '_blank')}
                       />
                     )}
-                    {message.audioUrl && (
-                      <audio controls style={{ maxWidth: '200px' }}>
-                        <source src={message.audioUrl} type="audio/webm" />
-                      </audio>
-                    )}
-                    {message.text && message.text !== "🎤 Voice message" && message.text !== "📷 Photo" && (
+                    {message.text && message.text !== "📷 Photo" && (
                       <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>{message.text}</p>
                     )}
-                    {message.text === "🎤 Voice message" && <span>🎤 Voice message</span>}
                     {message.text === "📷 Photo" && <span>📷 Photo</span>}
                   </div>
                   
@@ -420,7 +385,7 @@ const Chat: React.FC = () => {
         )}
       </div>
 
-      {/* Message Input Area - Exactly as in image */}
+      {/* Message Input Area - No voice recording */}
       <div style={{
         background: 'white',
         padding: '12px 16px',
@@ -501,25 +466,6 @@ const Chat: React.FC = () => {
           >
             <FaPaperPlane />
           </button>
-
-          {/* Voice Recorder - Right */}
-          <button
-            onClick={isRecording ? stopRecording : startRecording}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '22px',
-              color: isRecording ? '#e74c3c' : '#1e4fa3',
-              padding: '8px',
-              animation: isRecording ? 'pulse 1s infinite' : 'none'
-            }}
-          >
-            {isRecording ? <FaStop /> : <FaMicrophone />}
-          </button>
         </div>
       </div>
 
@@ -533,11 +479,6 @@ const Chat: React.FC = () => {
             opacity: 1;
             transform: translateY(0);
           }
-        }
-        
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.1); }
         }
       `}</style>
     </div>
