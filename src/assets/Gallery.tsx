@@ -513,6 +513,42 @@ const Gallery: React.FC = () => {
         </button>
       </div>
 
+      {/* LINKUP Overlay Button - On the Picture */}
+      <button
+        onClick={() => handleChat(currentParticipant)}
+        style={{
+          position: 'absolute',
+          bottom: '140px',
+          right: '20px',
+          background: 'rgba(30, 79, 163, 0.9)',
+          color: 'white',
+          border: 'none',
+          padding: '12px 20px',
+          borderRadius: '30px',
+          fontSize: '16px',
+          fontWeight: '600',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+          zIndex: 20,
+          backdropFilter: 'blur(10px)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'rgba(22, 61, 122, 0.95)';
+          e.currentTarget.style.transform = 'scale(1.05)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'rgba(30, 79, 163, 0.9)';
+          e.currentTarget.style.transform = 'scale(1)';
+        }}
+      >
+        <FaComment style={{ fontSize: '14px' }} />
+        LINKUP
+      </button>
+
       {/* Page Counter */}
       <div
         style={{
