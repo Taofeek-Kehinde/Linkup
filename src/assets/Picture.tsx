@@ -150,7 +150,7 @@ const Picture: React.FC = () => {
             animation: 'spin 0.8s linear infinite',
             margin: '0 auto 20px'
           }} />
-          <p style={{ color: '#1e4fa3' }}>Saving your photo...</p>
+          <p style={{ color: '#1e4fa3' }}>"uploading selfie...</p>
         </div>
       </div>
     );
@@ -364,7 +364,7 @@ const Picture: React.FC = () => {
                 animation: 'buttonGlow 1s ease-in-out infinite'
               }}
             >
-              Snap Photo
+              Capture
             </button>
           </div>
 

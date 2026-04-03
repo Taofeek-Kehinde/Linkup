@@ -1,3 +1,101 @@
-body {
+/* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   background-color: #f5f7fb;
+}
+
+/* Fullscreen Animated Background */
+.animated-bg {  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  animation: zoomChange 30s infinite ease-in-out;
+  background-image: url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=2070&auto=format&fit=crop&q=80') !important;
+}
+
+@keyframes zoomChange {
+  0%, 11% {
+    background-image: url("https://images.unsplash.com/photo-1560807707-8cc77767d783?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80");
+    transform: scale(1.02);
+  }
+  6% {
+    transform: scale(1.08);
+  }
+  16%, 27% {
+    transform: scale(1.02);
+  }
+  22% {
+    transform: scale(1.08);
+  }
+  32%, 43% {
+    transform: scale(1.02);
+  }
+  38% {
+    transform: scale(1.08);
+  }
+  48%, 59% {
+    transform: scale(1.02);
+  }
+  54% {
+    transform: scale(1.08);
+  }
+  64%, 75% {
+    transform: scale(1.02);
+  }
+  70% {
+    transform: scale(1.08);
+  }
+  80%, 91% {
+    transform: scale(1.02);
+  }
+  86% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1.02);
+  }
+}
+
+/* Landing Page Container */
+.landing-page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(40px, 8vh, 100px) 20px;
+}
+
+.landing-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 0;
+}
+
+.landing-page > *:not(.animated-bg) {
+  position: relative;
+  z-index: 2;
+}
+
+/* Existing page backgrounds fallback */
+body:not(.landing-page) {
+  background-color: #f5f7fb !important;
 }

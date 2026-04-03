@@ -149,15 +149,9 @@ const DateQr: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{
-        minHeight: 'auto',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: '#f5f7fb',
-        fontFamily: 'system-ui, sans-serif'
-      }}>
-        <div style={{ textAlign: 'center' }}>
+      <div className="landing-page" style={{minHeight: 'auto'}}>
+        <div className="animated-bg" />
+        <div style={{ textAlign: 'center', fontFamily: 'system-ui, sans-serif' }}>
           <div style={{
             width: '40px',
             height: '40px',
@@ -175,13 +169,125 @@ const DateQr: React.FC = () => {
 
   if (error && !currentEventId) {
     return (
+      <div className="landing-page">
+        <div className="animated-bg" />
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          padding: 'clamp(40px, 8vh, 100px) 20px',
+          fontFamily: 'system-ui, sans-serif'
+        }}>
+          <div style={{
+            textAlign: 'center',
+            width: '100%',
+            maxWidth: '480px',
+            animation: 'fadeIn 1s ease-in-out'
+          }}>
+            <h1 style={{
+              color: '#1e4fa3',
+              letterSpacing: '6px',
+              fontWeight: '700',
+              fontSize: 'clamp(28px, 5vw, 42px)',
+              marginBottom: '5px'
+            }}>
+              LINK UP
+            </h1>
+            <p style={{
+              color: '#1e4fa3',
+              fontStyle: 'italic',
+              fontSize: 'clamp(16px, 3vw, 22px)',
+              marginBottom: '40px'
+            }}>
+              {/* in the moment */}
+            </p>
+            <div style={{
+              background: 'white',
+              borderRadius: '24px',
+              padding: '40px',
+              textAlign: 'center',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
+            }}>
+              {/* <h2 style={{ color: '#e74c3c', marginBottom: '10px' }}>No Event Found</h2> */}
+              <p style={{ color: '#7f8c8d' }}>{error}</p>
+<>
+  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+    <button
+      onClick={() => navigate('/admin')}
+      style={{
+        background: '#1e4fa3',
+        color: 'white',
+        border: 'none',
+        padding: '20px',
+        width: '120px',
+        height: '120px',
+        borderRadius: '50%',
+        cursor: 'pointer',
+        fontSize: '16px',
+        fontWeight: '600',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 0 10px #1e4fa3',
+        transition: 'all 0.3s ease-in-out',
+        animation: 'pulse 2s infinite'
+      }}
+    >
+      Generate QR
+    </button>
+  </div>
+
+  <style>
+    {`
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 10px #1e4fa3;
+          transform: scale(1);
+        }
+        50% {
+          box-shadow: 0 0 25px #1e4fa3;
+          transform: scale(1.1);
+        }
+        100% {
+          box-shadow: 0 0 10px #1e4fa3;
+          transform: scale(1);
+        }
+      }
+
+      @media (max-width: 768px) {
+        button {
+          width: 90px !important;
+          height: 90px !important;
+          font-size: 14px !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        button {
+          width: 70px !important;
+          height: 70px !important;
+          font-size: 12px !important;
+        }
+      }
+    `}
+  </style>
+</>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="landing-page">
+      <div className="animated-bg" />
       <div style={{
-        minHeight: '100vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: '#f5f7fb',
-        padding: 'clamp(40px, 8vh, 100px) 20px',
+        width: '100%',
         fontFamily: 'system-ui, sans-serif'
       }}>
         <div style={{
@@ -190,6 +296,26 @@ const DateQr: React.FC = () => {
           maxWidth: '480px',
           animation: 'fadeIn 1s ease-in-out'
         }}>
+          <button
+            onClick={() => navigate('/admin')}
+            style={{
+              position: 'absolute',
+              top: '20px',
+              left: '20px',
+              background: 'white',
+              border: 'none',
+              padding: '10px',
+              borderRadius: '50%',
+              cursor: 'pointer',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <FaArrowLeft style={{ color: '#1e4fa3' }} />
+          </button>
+
           <h1 style={{
             color: '#1e4fa3',
             letterSpacing: '6px',
@@ -199,231 +325,135 @@ const DateQr: React.FC = () => {
           }}>
             LINK UP
           </h1>
+
           <p style={{
             color: '#1e4fa3',
             fontStyle: 'italic',
             fontSize: 'clamp(16px, 3vw, 22px)',
-            marginBottom: '40px'
+            marginBottom: '20px'
           }}>
-            {/* in the moment */}
+            in the moment
           </p>
+
           <div style={{
             background: 'white',
-            borderRadius: '24px',
-            padding: '40px',
-            textAlign: 'center',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
+            borderRadius: '20px',
+            padding: '15px 20px',
+            marginBottom: '25px',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.08)'
           }}>
-            {/* <h2 style={{ color: '#e74c3c', marginBottom: '10px' }}>No Event Found</h2> */}
-            <p style={{ color: '#7f8c8d' }}>{error}</p>
-            <button
-              onClick={() => navigate('/admin')}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+              <FaCalendarAlt style={{ color: '#1e4fa3' }} />
+              <span style={{ fontWeight: '600', color: '#333' }}>{eventName || "LINK UP Event"}</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', flexWrap: 'wrap' }}>
+              <FaMapMarkerAlt style={{ color: '#1e4fa3', marginTop: '2px' }} />
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {locations.length > 0 ? (
+                  locations.map((loc, idx) => (
+                    <span key={idx} style={{
+                      background: '#e8eef5',
+                      padding: '4px 12px',
+                      borderRadius: '50px',
+                      fontSize: '12px',
+                      color: '#1e4fa3'
+                    }}>
+                      {loc}
+                    </span>
+                  ))
+                ) : (
+                  <span style={{ color: '#7f8c8d' }}>Multiple locations across Nigeria</span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div style={{
+            background: 'white',
+            width: 'clamp(220px, 65vw, 300px)',
+            height: 'clamp(220px, 65vw, 300px)',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+            padding: '15px',
+            margin: '0 auto 20px auto',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+            animation: 'pulse 2s infinite ease-in-out'
+          }}>
+            <div
+              ref={qrCodeRef}
               style={{
-                marginTop: '20px',
+                width: '70%',
+                height: '70%',
+                maxWidth: '180px',
+                maxHeight: '180px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            />
+          </div>
+
+          <p style={{
+            color: '#1e4fa3',
+            marginBottom: '25px',
+            fontSize: 'clamp(14px, 3vw, 18px)'
+          }}>
+            (Scan to linkup)
+          </p>
+
+          <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={handleShare}
+              style={{
                 background: '#1e4fa3',
                 color: 'white',
                 border: 'none',
-                padding: '10px 20px',
+                padding: '12px 24px',
                 borderRadius: '50px',
-                cursor: 'pointer'
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = '#163d7a'}
+              onMouseLeave={(e) => e.currentTarget.style.background = '#1e4fa3'}
+            >
+              <FaShareAlt /> Share Event
+            </button>
+            <button
+              onClick={handleDownloadQR}
+              style={{
+                background: 'white',
+                color: '#1e4fa3',
+                border: '2px solid #1e4fa3',
+                padding: '12px 24px',
+                borderRadius: '50px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#e8eef5';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'white';
               }}
             >
-              Generate QR
+              <FaDownload /> Save QR
             </button>
           </div>
         </div>
       </div>
-    );
-  }
-
-  return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      background: '#f5f7fb',
-      padding: 'clamp(40px, 8vh, 100px) 20px',
-      fontFamily: 'system-ui, sans-serif'
-    }}>
-      <div style={{
-        textAlign: 'center',
-        width: '100%',
-        maxWidth: '480px',
-        animation: 'fadeIn 1s ease-in-out'
-      }}>
-        <button
-          onClick={() => navigate('/admin')}
-          style={{
-            position: 'absolute',
-            top: '20px',
-            left: '20px',
-            background: 'white',
-            border: 'none',
-            padding: '10px',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <FaArrowLeft style={{ color: '#1e4fa3' }} />
-        </button>
-
-        <h1 style={{
-          color: '#1e4fa3',
-          letterSpacing: '6px',
-          fontWeight: '700',
-          fontSize: 'clamp(28px, 5vw, 42px)',
-          marginBottom: '5px'
-        }}>
-          LINK UP
-        </h1>
-
-        <p style={{
-          color: '#1e4fa3',
-          fontStyle: 'italic',
-          fontSize: 'clamp(16px, 3vw, 22px)',
-          marginBottom: '20px'
-        }}>
-          in the moment
-        </p>
-
-        <div style={{
-          background: 'white',
-          borderRadius: '20px',
-          padding: '15px 20px',
-          marginBottom: '25px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.08)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-            <FaCalendarAlt style={{ color: '#1e4fa3' }} />
-            <span style={{ fontWeight: '600', color: '#333' }}>{eventName || "LINK UP Event"}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', flexWrap: 'wrap' }}>
-            <FaMapMarkerAlt style={{ color: '#1e4fa3', marginTop: '2px' }} />
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              {locations.length > 0 ? (
-                locations.map((loc, idx) => (
-                  <span key={idx} style={{
-                    background: '#e8eef5',
-                    padding: '4px 12px',
-                    borderRadius: '50px',
-                    fontSize: '12px',
-                    color: '#1e4fa3'
-                  }}>
-                    {loc}
-                  </span>
-                ))
-              ) : (
-                <span style={{ color: '#7f8c8d' }}>Multiple locations across Nigeria</span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div style={{
-          background: 'white',
-          width: 'clamp(220px, 65vw, 300px)',
-          height: 'clamp(220px, 65vw, 300px)',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          padding: '15px',
-          margin: '0 auto 20px auto',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-          animation: 'pulse 2s infinite ease-in-out'
-        }}>
-          <div
-            ref={qrCodeRef}
-            style={{
-              width: '70%',
-              height: '70%',
-              maxWidth: '180px',
-              maxHeight: '180px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          />
-        </div>
-
-        <p style={{
-          color: '#1e4fa3',
-          marginBottom: '25px',
-          fontSize: 'clamp(14px, 3vw, 18px)'
-        }}>
-          (Scan to linkup)
-        </p>
-
-        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button
-            onClick={handleShare}
-            style={{
-              background: '#1e4fa3',
-              color: 'white',
-              border: 'none',
-              padding: '12px 24px',
-              borderRadius: '50px',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.background = '#163d7a'}
-            onMouseLeave={(e) => e.currentTarget.style.background = '#1e4fa3'}
-          >
-            <FaShareAlt /> Share Event
-          </button>
-          <button
-            onClick={handleDownloadQR}
-            style={{
-              background: 'white',
-              color: '#1e4fa3',
-              border: '2px solid #1e4fa3',
-              padding: '12px 24px',
-              borderRadius: '50px',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#e8eef5';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'white';
-            }}
-          >
-            <FaDownload /> Save QR
-          </button>
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes pulse {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.05); }
-          100% { transform: scale(1); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 };
