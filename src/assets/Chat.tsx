@@ -208,15 +208,17 @@ const Chat: React.FC = () => {
           
           <div style={{
             position: 'relative',
-            fontSize: '20px',
+            fontSize: '22px',
             fontWeight: '700',
             color: '#333',
             letterSpacing: '1px',
             textAlign: 'center',
-            top: '8px'
+            top: '16px',
+            lineHeight: 1
           }}>
             TALKING STAGE
           </div>
+
 
           
           <div style={{
