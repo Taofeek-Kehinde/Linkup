@@ -30,7 +30,7 @@ const App: React.FC = () => {
         {/* Chat page - 1-on-1 messaging with timer */}
         <Route path="/chat/:eventId/:participantId" element={<Chat />} />
         {/* AllChat page - group chat for all participants */}
-        <Route path="/all-chat/:eventId" element={<AllChat />} />
+        <Route path="/all-chats/:eventId" element={<AllChat />} />
         
         {/* Admin page with encryption lock */}
         <Route 
