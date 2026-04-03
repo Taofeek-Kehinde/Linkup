@@ -155,7 +155,7 @@ const Chat: React.FC = () => {
         top: 0,
         zIndex: 100
       }}>
-        Top Row: Back Arrow, TALKING STAGE, LINKS
+        {/* Top Row: Back Arrow, TALKING STAGE, LINKS */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -187,7 +187,7 @@ const Chat: React.FC = () => {
     color: '#333',
     letterSpacing: '1px',
     textAlign: 'center',    // center horizontally
-    marginTop: '130px'       // pushes it down
+    marginTop: '30px'       // pushes it down
   }}
 >
   TALKING STAGE
