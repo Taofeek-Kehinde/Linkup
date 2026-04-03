@@ -231,6 +231,7 @@ const Chat: React.FC = () => {
 >
   LINKS
 </div>
+
         </div>
         
         {/* Candy&Classy under it */}
