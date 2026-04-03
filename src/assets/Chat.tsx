@@ -218,18 +218,19 @@ const Chat: React.FC = () => {
             lineHeight: 1
           }}>
             TALKING STAGE
-          </div>
-
-
-          
-          <div style={{
-            fontSize: '14px',
-            fontWeight: '500',
-            color: '#1e4fa3',
-            padding: '8px 0'
-          }}>
-            LINKS
-          </div>
+          </div>          
+          <div 
+  onClick={() => navigate(`/all-chats/${eventId}`)}
+  style={{
+    fontSize: '14px',
+    fontWeight: '500',
+    color: '#1e4fa3',
+    padding: '8px 0',
+    cursor: 'pointer'
+  }}
+>
+  LINKS
+</div>
         </div>
         
         {/* Candy&Classy under it */}

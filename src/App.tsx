@@ -5,6 +5,7 @@ import Picture from "./assets/Picture";
 import Lollipop from "./assets/Lolipop";
 import Gallery from "./assets/Gallery";
 import Chat from "./assets/Chat";
+import AllChat from './assets/AllChat';
 import {  LinkupGenerator } from "./admin-lock/admin";
 
 const App: React.FC = () => {
@@ -28,6 +29,8 @@ const App: React.FC = () => {
         
         {/* Chat page - 1-on-1 messaging with timer */}
         <Route path="/chat/:eventId/:participantId" element={<Chat />} />
+        {/* AllChat page - group chat for all participants */}
+        <Route path="/all-chat/:eventId" element={<AllChat />} />
         
         {/* Admin page with encryption lock */}
         <Route 
