@@ -187,7 +187,7 @@ const Chat: React.FC = () => {
     color: '#333',
     letterSpacing: '1px',
     textAlign: 'center',    // center horizontally
-    marginTop: '30px'       // pushes it down
+    marginTop: '130px'       // pushes it down
   }}
 >
   TALKING STAGE
