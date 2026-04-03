@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
-import { FaArrowLeft, FaPaperPlane, FaMicrophone, FaCamera, FaStop, FaUserCircle } from 'react-icons/fa';
+import { FaArrowLeft, FaPaperPlane, FaMicrophone, FaCamera, FaStop, FaUserCircle, FaEllipsisH } from 'react-icons/fa';
 
 interface Message {
   id: string;
@@ -26,9 +26,10 @@ const Chat: React.FC = () => {
   const [sendingImage, setSendingImage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [participantName, setParticipantName] = useState("");
+  const [, setParticipantName] = useState("");
   const [participantPhoto, setParticipantPhoto] = useState("");
-  const [eventTitle, setEventTitle] = useState("");
+  const [, setEventTitle] = useState("");
+  const [participantLocation, setParticipantLocation] = useState("");
 
   useEffect(() => {
     // Get participant info from location state
@@ -36,6 +37,7 @@ const Chat: React.FC = () => {
       setParticipantName(location.state.participantName || "LINKUP User");
       setParticipantPhoto(location.state.participantPhoto || "");
       setEventTitle(location.state.eventName || "LINK UP Event");
+      setParticipantLocation(location.state.participantLocation || "Location");
     }
 
     // Timer countdown
@@ -79,7 +81,6 @@ const Chat: React.FC = () => {
       setMessages(messagesList.reverse());
       setLoading(false);
       
-      // Scroll to bottom
       setTimeout(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
@@ -121,7 +122,6 @@ const Chat: React.FC = () => {
       recorder.onstop = async () => {
         const audioBlob = new Blob(chunks, { type: 'audio/webm' });
         
-        // Convert to base64 for storage in Firestore
         const reader = new FileReader();
         reader.onloadend = async () => {
           const base64Audio = reader.result as string;
@@ -195,16 +195,16 @@ const Chat: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: '#f5f7fb',
       display: 'flex',
       flexDirection: 'column',
       fontFamily: 'system-ui, sans-serif'
     }}>
-      {/* Header with Timer */}
+      {/* Header - Exactly as in image */}
       <div style={{
         background: 'white',
-        padding: '15px 20px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+        padding: '12px 16px',
+        borderBottom: '1px solid #e8eef5',
         position: 'sticky',
         top: 0,
         zIndex: 100
@@ -212,11 +212,7 @@ const Chat: React.FC = () => {
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          maxWidth: '1200px',
-          margin: '0 auto',
-          flexWrap: 'wrap',
-          gap: '15px'
+          justifyContent: 'space-between'
         }}>
           <button
             onClick={() => navigate(`/gallery/${eventId}`)}
@@ -227,87 +223,92 @@ const Chat: React.FC = () => {
               fontSize: '20px',
               color: '#1e4fa3',
               display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
+              alignItems: 'center'
             }}
           >
-            <FaArrowLeft /> Back
+            <FaArrowLeft />
           </button>
           
           <div style={{ textAlign: 'center' }}>
-            <h2 style={{ fontSize: '18px', margin: 0, color: '#333' }}>
-              Chat with {participantName}
-            </h2>
-            <p style={{ fontSize: '12px', margin: '5px 0 0', color: '#7f8c8d' }}>
-              {eventTitle}
+            <h1 style={{ 
+              fontSize: '18px', 
+              margin: 0, 
+              color: '#1e4fa3',
+              fontWeight: '600',
+              letterSpacing: '1px'
+            }}>
+              <FaEllipsisH style={{ fontSize: '14px', marginRight: '4px', display: 'inline' }} />
+              LINKUP
+              <FaEllipsisH style={{ fontSize: '14px', marginLeft: '4px', display: 'inline' }} />
+            </h1>
+            <p style={{ 
+              fontSize: '11px', 
+              margin: '2px 0 0', 
+              color: '#7f8c8d',
+              fontWeight: '500'
+            }}>
+              LINKS • TALKINGSTAGE
             </p>
           </div>
           
-          <div style={{ textAlign: 'center' }}>
-            <div style={{
-              fontSize: 'clamp(24px, 5vw, 32px)',
-              fontWeight: '700',
-              color: '#e74c3c',
-              fontFamily: 'monospace'
-            }}>
-              {formatTime(timeLeft)}
-            </div>
-            <p style={{ fontSize: '10px', margin: 0, color: '#7f8c8d' }}>Time Left</p>
-          </div>
+          <div style={{ width: '24px' }} />
+        </div>
+        
+        {/* Event Name and Location Row */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          marginTop: '8px',
+          flexWrap: 'wrap'
+        }}>
+          <span style={{
+            fontSize: '13px',
+            fontWeight: '600',
+            color: '#333',
+            background: '#f0f0f0',
+            padding: '4px 12px',
+            borderRadius: '50px'
+          }}>
+            (Candy&Classy)
+          </span>
+          <span style={{
+            fontSize: '12px',
+            color: '#7f8c8d'
+          }}>
+            {participantLocation}
+          </span>
         </div>
       </div>
 
-      {/* Timer Circle */}
+      {/* Timer Display - Centered with TimeLeft */}
       <div style={{
         display: 'flex',
         justifyContent: 'center',
-        padding: '20px',
-        background: 'rgba(255,255,255,0.1)',
-        margin: '10px 20px',
-        borderRadius: '20px'
+        alignItems: 'center',
+        padding: '16px',
+        background: 'white',
+        margin: '0',
+        borderBottom: '1px solid #e8eef5'
       }}>
         <div style={{
-          position: 'relative',
-          width: '120px',
-          height: '120px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
+          fontSize: '28px',
+          fontWeight: '700',
+          color: '#e74c3c',
+          fontFamily: 'monospace',
+          letterSpacing: '2px'
         }}>
-          <svg width="120" height="120" viewBox="0 0 120 120">
-            <circle
-              cx="60"
-              cy="60"
-              r="54"
-              fill="none"
-              stroke="rgba(255,255,255,0.2)"
-              strokeWidth="8"
-            />
-            <circle
-              cx="60"
-              cy="60"
-              r="54"
-              fill="none"
-              stroke="white"
-              strokeWidth="8"
-              strokeDasharray={`${2 * Math.PI * 54}`}
-              strokeDashoffset={`${2 * Math.PI * 54 * (1 - timeLeft / (15 * 60 * 60))}`}
-              strokeLinecap="round"
-              transform="rotate(-90 60 60)"
-              style={{ transition: 'stroke-dashoffset 1s linear' }}
-            />
-          </svg>
-          <div style={{
-            position: 'absolute',
-            textAlign: 'center',
-            color: 'white'
-          }}>
-            <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
-              {Math.floor(timeLeft / 3600)}h
-            </div>
-            <div style={{ fontSize: '12px' }}>remaining</div>
-          </div>
+          ({formatTime(timeLeft)})
         </div>
+        <span style={{
+          fontSize: '12px',
+          color: '#7f8c8d',
+          marginLeft: '8px',
+          fontWeight: '500'
+        }}>
+          TimeLeft
+        </span>
       </div>
 
       {/* Messages Container */}
@@ -317,10 +318,11 @@ const Chat: React.FC = () => {
         padding: '20px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '15px'
+        gap: '12px',
+        background: '#f5f7fb'
       }}>
         {loading ? (
-          <div style={{ textAlign: 'center', color: 'white' }}>
+          <div style={{ textAlign: 'center', color: '#7f8c8d', padding: '40px' }}>
             Loading messages...
           </div>
         ) : (
@@ -335,36 +337,37 @@ const Chat: React.FC = () => {
                 }}
               >
                 <div style={{
-                  maxWidth: '70%',
+                  maxWidth: '75%',
                   display: 'flex',
                   gap: '8px',
                   alignItems: 'flex-start'
                 }}>
                   {message.senderId !== 'currentUser' && (
                     <div style={{
-                      width: '35px',
-                      height: '35px',
+                      width: '32px',
+                      height: '32px',
                       borderRadius: '50%',
-                      background: '#f0f0f0',
+                      background: '#e8eef5',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      overflow: 'hidden'
+                      overflow: 'hidden',
+                      flexShrink: 0
                     }}>
                       {participantPhoto ? (
                         <img src={participantPhoto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
-                        <FaUserCircle size={35} color="#1e4fa3" />
+                        <FaUserCircle size={32} color="#1e4fa3" />
                       )}
                     </div>
                   )}
                   
                   <div style={{
-                    background: message.senderId === 'currentUser' ? '#667eea' : 'white',
+                    background: message.senderId === 'currentUser' ? '#1e4fa3' : 'white',
                     color: message.senderId === 'currentUser' ? 'white' : '#333',
-                    padding: '10px 15px',
-                    borderRadius: message.senderId === 'currentUser' ? '20px 20px 5px 20px' : '20px 20px 20px 5px',
-                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                    padding: '10px 14px',
+                    borderRadius: message.senderId === 'currentUser' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
                     maxWidth: '100%',
                     wordWrap: 'break-word'
                   }}>
@@ -375,7 +378,7 @@ const Chat: React.FC = () => {
                         style={{
                           maxWidth: '200px',
                           maxHeight: '200px',
-                          borderRadius: '10px',
+                          borderRadius: '12px',
                           marginBottom: '5px',
                           cursor: 'pointer'
                         }}
@@ -385,36 +388,28 @@ const Chat: React.FC = () => {
                     {message.audioUrl && (
                       <audio controls style={{ maxWidth: '200px' }}>
                         <source src={message.audioUrl} type="audio/webm" />
-                        Your browser does not support the audio element.
                       </audio>
                     )}
                     {message.text && message.text !== "🎤 Voice message" && message.text !== "📷 Photo" && (
-                      <p style={{ margin: 0, fontSize: '14px' }}>{message.text}</p>
+                      <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>{message.text}</p>
                     )}
                     {message.text === "🎤 Voice message" && <span>🎤 Voice message</span>}
                     {message.text === "📷 Photo" && <span>📷 Photo</span>}
-                    <div style={{
-                      fontSize: '10px',
-                      marginTop: '5px',
-                      opacity: 0.7,
-                      textAlign: 'right'
-                    }}>
-                      {message.timestamp?.toDate?.().toLocaleTimeString() || 'Just now'}
-                    </div>
                   </div>
                   
                   {message.senderId === 'currentUser' && (
                     <div style={{
-                      width: '35px',
-                      height: '35px',
+                      width: '32px',
+                      height: '32px',
                       borderRadius: '50%',
-                      background: '#667eea',
+                      background: '#1e4fa3',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: 'white'
+                      color: 'white',
+                      flexShrink: 0
                     }}>
-                      <FaUserCircle size={35} />
+                      <FaUserCircle size={32} />
                     </div>
                   )}
                 </div>
@@ -425,10 +420,10 @@ const Chat: React.FC = () => {
         )}
       </div>
 
-      {/* Message Input Area */}
+      {/* Message Input Area - Exactly as in image */}
       <div style={{
         background: 'white',
-        padding: '15px 20px',
+        padding: '12px 16px',
         borderTop: '1px solid #e8eef5',
         position: 'sticky',
         bottom: 0
@@ -436,34 +431,23 @@ const Chat: React.FC = () => {
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
-          maxWidth: '1200px',
-          margin: '0 auto'
+          gap: '12px'
         }}>
           {/* Camera Icon - Left */}
           <button
             onClick={takePhoto}
             disabled={sendingImage}
             style={{
-              background: '#e8eef5',
+              background: 'none',
               border: 'none',
-              width: '45px',
-              height: '45px',
-              borderRadius: '50%',
               cursor: sendingImage ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '20px',
+              fontSize: '22px',
               color: '#1e4fa3',
-              transition: 'all 0.3s ease',
+              padding: '8px',
               opacity: sendingImage ? 0.5 : 1
-            }}
-            onMouseEnter={(e) => {
-              if (!sendingImage) e.currentTarget.style.background = '#d1d9e6';
-            }}
-            onMouseLeave={(e) => {
-              if (!sendingImage) e.currentTarget.style.background = '#e8eef5';
             }}
           >
             <FaCamera />
@@ -483,18 +467,19 @@ const Chat: React.FC = () => {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-            placeholder="Type a message..."
+            placeholder="Say Something..."
             style={{
               flex: 1,
-              padding: '12px 18px',
-              borderRadius: '50px',
-              border: '2px solid #e8eef5',
+              padding: '12px 16px',
+              borderRadius: '25px',
+              border: '1px solid #e0e0e0',
               fontSize: '14px',
               outline: 'none',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              background: '#f5f7fb'
             }}
-            onFocus={(e) => e.currentTarget.style.borderColor = '#667eea'}
-            onBlur={(e) => e.currentTarget.style.borderColor = '#e8eef5'}
+            onFocus={(e) => e.currentTarget.style.borderColor = '#1e4fa3'}
+            onBlur={(e) => e.currentTarget.style.borderColor = '#e0e0e0'}
           />
 
           {/* Send Button */}
@@ -502,17 +487,15 @@ const Chat: React.FC = () => {
             onClick={sendMessage}
             disabled={!newMessage.trim()}
             style={{
-              background: newMessage.trim() ? '#667eea' : '#e8eef5',
+              background: 'none',
               border: 'none',
-              width: '45px',
-              height: '45px',
-              borderRadius: '50%',
               cursor: newMessage.trim() ? 'pointer' : 'not-allowed',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '18px',
-              color: newMessage.trim() ? 'white' : '#95a5a6',
+              fontSize: '22px',
+              color: newMessage.trim() ? '#1e4fa3' : '#bdc3c7',
+              padding: '8px',
               transition: 'all 0.3s ease'
             }}
           >
@@ -523,18 +506,15 @@ const Chat: React.FC = () => {
           <button
             onClick={isRecording ? stopRecording : startRecording}
             style={{
-              background: isRecording ? '#e74c3c' : '#e8eef5',
+              background: 'none',
               border: 'none',
-              width: '45px',
-              height: '45px',
-              borderRadius: '50%',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '20px',
-              color: isRecording ? 'white' : '#1e4fa3',
-              transition: 'all 0.3s ease',
+              fontSize: '22px',
+              color: isRecording ? '#e74c3c' : '#1e4fa3',
+              padding: '8px',
               animation: isRecording ? 'pulse 1s infinite' : 'none'
             }}
           >
