@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
-import { collection, query, where, getDocs, orderBy, limit, doc, getDoc } from 'firebase/firestore';
+import { collection, query,  getDocs, orderBy, limit, doc, getDoc } from 'firebase/firestore';
 import { FaChevronLeft, FaUserCircle } from 'react-icons/fa';
 
 interface ChatUser {
