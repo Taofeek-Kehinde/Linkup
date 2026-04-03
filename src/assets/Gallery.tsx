@@ -111,7 +111,7 @@ const Gallery: React.FC = () => {
       const filtered = baseList.filter(p => p.location === selectedLocation);
       setFilteredParticipants(filtered);
     }
-    setCurrentIndex(0); // Reset to first page when filter changes
+    setCurrentIndex(0);
   }, [selectedLocation, participants, currentUserId]);
 
   const handleChat = (participant: Participant) => {
@@ -141,7 +141,7 @@ const Gallery: React.FC = () => {
     }
   };
 
-  // Handle touch/swipe events for mobile
+  // Handle touch/swipe events
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
     setIsScrolling(true);
@@ -152,18 +152,16 @@ const Gallery: React.FC = () => {
     const touchEndY = e.changedTouches[0].clientY;
     const diff = touchStartY.current - touchEndY;
     
-    // Swipe up - next
     if (diff > 50 && currentIndex < filteredParticipants.length - 1) {
       goToNext();
     }
-    // Swipe down - previous
     if (diff < -50 && currentIndex > 0) {
       goToPrevious();
     }
     setIsScrolling(false);
   };
 
-  // Handle wheel/scroll for desktop
+  // Handle wheel scroll
   const handleWheel = (e: React.WheelEvent) => {
     if (Math.abs(e.deltaY) > 30) {
       if (e.deltaY > 0 && currentIndex < filteredParticipants.length - 1) {
@@ -177,7 +175,8 @@ const Gallery: React.FC = () => {
   if (loading) {
     return (
       <div style={{
-        minHeight: '100vh',
+        width: '100vw',
+        height: '100vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -203,18 +202,19 @@ const Gallery: React.FC = () => {
   if (filteredParticipants.length === 0) {
     return (
       <div style={{
-        minHeight: '100vh',
+        width: '100vw',
+        height: '100vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         background: '#f5f7fb',
-        padding: 'clamp(40px, 8vh, 100px) 20px',
         fontFamily: 'system-ui, sans-serif'
       }}>
         <div style={{
           textAlign: 'center',
           width: '100%',
-          maxWidth: '480px'
+          maxWidth: '480px',
+          padding: '20px'
         }}>
           <div style={{
             background: 'white',
@@ -256,18 +256,22 @@ const Gallery: React.FC = () => {
   return (
     <div
       style={{
-        minHeight: '100vh',
+        width: '100vw',
         height: '100vh',
         background: '#000',
         fontFamily: 'system-ui, sans-serif',
         overflow: 'hidden',
-        position: 'relative'
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
       }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onWheel={handleWheel}
     >
-      {/* Background Image */}
+      {/* Full Screen Background Image */}
       <div
         style={{
           position: 'absolute',
@@ -279,10 +283,10 @@ const Gallery: React.FC = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          transition: 'background-image 0.3s ease'
+          transition: 'background-image 0.5s ease-in-out'
         }}
       >
-        {/* Dark Overlay for better text readability */}
+        {/* Dark Overlay */}
         <div
           style={{
             position: 'absolute',
@@ -290,12 +294,12 @@ const Gallery: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%)'
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%)'
           }}
         />
       </div>
 
-      {/* Header - CANDY & CLASSY */}
+      {/* Header */}
       <div
         style={{
           position: 'absolute',
@@ -318,7 +322,7 @@ const Gallery: React.FC = () => {
             <h1
               style={{
                 color: 'white',
-                fontSize: 'clamp(20px, 5vw, 28px)',
+                fontSize: 'clamp(24px, 5vw, 32px)',
                 fontWeight: '700',
                 margin: 0,
                 letterSpacing: '2px',
@@ -329,7 +333,7 @@ const Gallery: React.FC = () => {
             </h1>
           </div>
 
-          {/* Location Filter Dropdown - Top Right */}
+          {/* Location Filter */}
           <div
             style={{
               position: 'absolute',
@@ -410,10 +414,6 @@ const Gallery: React.FC = () => {
                         color: '#333',
                         background: selectedLocation === 'all' ? '#f5f5f5' : 'transparent'
                       }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = '#f5f5f5')}
-                      onMouseLeave={(e) => {
-                        if (selectedLocation !== 'all') e.currentTarget.style.background = 'transparent';
-                      }}
                     >
                       🌍 All Locations
                     </div>
@@ -432,10 +432,6 @@ const Gallery: React.FC = () => {
                           color: '#333',
                           background: selectedLocation === location ? '#f5f5f5' : 'transparent'
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = '#f5f5f5')}
-                        onMouseLeave={(e) => {
-                          if (selectedLocation !== location) e.currentTarget.style.background = 'transparent';
-                        }}
                       >
                         📍 {location}
                       </div>
@@ -448,14 +444,14 @@ const Gallery: React.FC = () => {
         </div>
       </div>
 
-      {/* Participant Info Overlay - Bottom */}
+      {/* Bottom Section */}
       <div
         style={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
-          padding: '30px 20px',
+          padding: '40px 20px 50px',
           background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)',
           zIndex: 10
         }}
@@ -467,13 +463,13 @@ const Gallery: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '8px',
-            marginBottom: '16px'
+            marginBottom: '20px'
           }}
         >
-          <FaMapMarkerAlt style={{ color: '#fff', fontSize: '16px' }} />
+          <FaMapMarkerAlt style={{ color: '#fff', fontSize: '18px' }} />
           <span
             style={{
-              fontSize: '18px',
+              fontSize: '20px',
               color: 'white',
               fontWeight: '500',
               textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
@@ -487,16 +483,16 @@ const Gallery: React.FC = () => {
         <button
           onClick={() => handleChat(currentParticipant)}
           style={{
-            width: '100%',
-            maxWidth: '300px',
+            width: '90%',
+            maxWidth: '320px',
             margin: '0 auto',
             display: 'block',
             background: '#1e4fa3',
             color: 'white',
             border: 'none',
-            padding: '14px 24px',
+            padding: '16px 24px',
             borderRadius: '50px',
-            fontSize: '16px',
+            fontSize: '18px',
             fontWeight: '600',
             cursor: 'pointer',
             transition: 'all 0.3s ease',
@@ -511,7 +507,7 @@ const Gallery: React.FC = () => {
             e.currentTarget.style.transform = 'scale(1)';
           }}
         >
-          <FaComment style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+          <FaComment style={{ marginRight: '10px', verticalAlign: 'middle' }} />
           LINKUPwithME
         </button>
       </div>
@@ -522,20 +518,20 @@ const Gallery: React.FC = () => {
           onClick={goToPrevious}
           style={{
             position: 'absolute',
-            left: '10px',
+            left: '15px',
             top: '50%',
             transform: 'translateY(-50%)',
             background: 'rgba(255,255,255,0.3)',
             border: 'none',
-            width: '40px',
-            height: '40px',
+            width: '45px',
+            height: '45px',
             borderRadius: '50%',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: 'white',
-            fontSize: '20px',
+            fontSize: '22px',
             backdropFilter: 'blur(5px)',
             zIndex: 10,
             transition: 'all 0.3s ease'
@@ -552,20 +548,20 @@ const Gallery: React.FC = () => {
           onClick={goToNext}
           style={{
             position: 'absolute',
-            right: '10px',
+            right: '15px',
             top: '50%',
             transform: 'translateY(-50%)',
             background: 'rgba(255,255,255,0.3)',
             border: 'none',
-            width: '40px',
-            height: '40px',
+            width: '45px',
+            height: '45px',
             borderRadius: '50%',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: 'white',
-            fontSize: '20px',
+            fontSize: '22px',
             backdropFilter: 'blur(5px)',
             zIndex: 10,
             transition: 'all 0.3s ease'
@@ -583,31 +579,33 @@ const Gallery: React.FC = () => {
           position: 'absolute',
           bottom: '20px',
           right: '20px',
-          background: 'rgba(0,0,0,0.5)',
-          padding: '4px 12px',
+          background: 'rgba(0,0,0,0.6)',
+          padding: '6px 14px',
           borderRadius: '20px',
           color: 'white',
-          fontSize: '12px',
+          fontSize: '13px',
           fontWeight: '500',
-          zIndex: 10
+          zIndex: 10,
+          backdropFilter: 'blur(4px)'
         }}
       >
         {currentIndex + 1} / {filteredParticipants.length}
       </div>
 
-      {/* Swipe Instruction */}
+      {/* Swipe Instruction - Only show on mobile */}
       <div
         style={{
           position: 'absolute',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          color: 'rgba(255,255,255,0.5)',
-          fontSize: '12px',
+          color: 'rgba(255,255,255,0.4)',
+          fontSize: '13px',
           textAlign: 'center',
           pointerEvents: 'none',
           zIndex: 10,
-          whiteSpace: 'nowrap'
+          whiteSpace: 'nowrap',
+          display: 'block'
         }}
       >
         ↑ Swipe up/down to browse ↓
