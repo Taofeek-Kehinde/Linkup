@@ -213,7 +213,7 @@ const Chat: React.FC = () => {
             color: '#333',
             letterSpacing: '1px',
             textAlign: 'center',
-            top: '16px',
+            top: '30px',
             lineHeight: 1
           }}>
             TALKING STAGE
