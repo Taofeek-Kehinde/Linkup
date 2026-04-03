@@ -163,62 +163,79 @@ const Chat: React.FC = () => {
           marginBottom: '12px'
         }}>
 
-<button
-  onClick={() => navigate(`/gallery/${eventId}`)}
+<div
   style={{
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: '20px',
-    color: '#1e4fa3',
     display: 'flex',
-    alignItems: 'center',
-    gap: '6px'
+    flexDirection: 'column', // stack children vertically
+    alignItems: 'center',    // center horizontally
+    gap: '12px',             // spacing between elements
+    marginTop: '20px'        // space from top of page or section
   }}
 >
-  <FaChevronLeft />
-  LINKUP
-</button>
-          
-          <div
-  style={{
-    fontSize: '22px',       // bigger text
-    fontWeight: '700',      // bolder
-    color: '#333',
-    letterSpacing: '1px',
-    textAlign: 'center',    // center horizontally
-    marginTop: '30px'       // pushes it down
-  }}
->
-  TALKING STAGE
-</div>
-          
-          <div style={{
-            fontSize: '14px',
-            fontWeight: '500',
-            color: '#1e4fa3'
-          }}>
-            LINKS
-          </div>
-        </div>
-        
-        {/* Candy&Classy under it */}
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '16px'
-        }}>
-          <span style={{
-            fontSize: '13px',
-            fontWeight: '600',
-            color: '#333',
-            // background: '#f0f0f0',
-            padding: '4px 12px',
-            borderRadius: '50px'
-          }}>
-            (Candy&Classy)
-          </span>
-        </div>
+  {/* Back button */}
+  <button
+    onClick={() => navigate(`/gallery/${eventId}`)}
+    style={{
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+      fontSize: '20px',
+      color: '#1e4fa3',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '6px'
+    }}
+  >
+    <FaChevronLeft />
+    LINKUP
+  </button>
 
+  {/* Talking Stage */}
+  <div
+    style={{
+      fontSize: '26px',       // bigger text
+      fontWeight: '700',      // bolder
+      color: '#333',
+      letterSpacing: '1px',
+      textAlign: 'center',
+      marginTop: '15px'       // space below button
+    }}
+  >
+    TALKING STAGE
+  </div>
+
+  {/* Links */}
+  <div
+    style={{
+      fontSize: '14px',
+      fontWeight: '500',
+      color: '#1e4fa3'
+    }}
+  >
+    LINKS
+  </div>
+
+  {/* Candy&Classy */}
+  <div
+    style={{
+      textAlign: 'center',
+      marginBottom: '16px'
+    }}
+  >
+    <span
+      style={{
+        fontSize: '13px',
+        fontWeight: '600',
+        color: '#333',
+        padding: '4px 12px',
+        borderRadius: '50px'
+      }}
+    >
+      (Candy&Classy)
+    </span>
+  </div>
+</div>
+</div>
        {/* Time Left with border-radius and box-shadow */}
   {/* Timer with border-radius and box-shadow */}
 <div
