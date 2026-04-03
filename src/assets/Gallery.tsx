@@ -265,13 +265,15 @@ const Gallery: React.FC = () => {
         top: 0,
         left: 0,
         right: 0,
-        bottom: 0
+        bottom: 0,
+        display: 'flex',
+        flexDirection: 'column'
       }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onWheel={handleWheel}
     >
-      {/* Full Screen Background Image */}
+      {/* Full Screen Background Image - but not covering button area */}
       <div
         style={{
           position: 'absolute',
@@ -294,7 +296,7 @@ const Gallery: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%)'
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%)'
           }}
         />
       </div>
@@ -302,12 +304,10 @@ const Gallery: React.FC = () => {
       {/* Header */}
       <div
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
+          position: 'relative',
           padding: '20px',
-          zIndex: 10
+          zIndex: 10,
+          flexShrink: 0
         }}
       >
         <div
@@ -444,16 +444,20 @@ const Gallery: React.FC = () => {
         </div>
       </div>
 
-      {/* Bottom Section with LINKUP Button */}
+      {/* Spacer to push content down */}
+      <div style={{ flex: 1 }} />
+
+      {/* Bottom Section with LINKUP Button - ALWAYS VISIBLE */}
       <div
         style={{
-          position: 'absolute',
+          position: 'relative',
           bottom: 0,
           left: 0,
           right: 0,
-          padding: '40px 20px 50px',
-          background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)',
-          zIndex: 10
+          padding: '30px 20px 40px',
+          background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%)',
+          zIndex: 10,
+          flexShrink: 0
         }}
       >
         {/* Location */}
