@@ -30,7 +30,7 @@ const Gallery: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string>("");
-  const [currentUserLocation, setCurrentUserLocation] = useState<string>("");
+  const [, setCurrentUserLocation] = useState<string>("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const touchStartY = useRef<number>(0);
