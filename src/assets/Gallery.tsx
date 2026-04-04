@@ -89,7 +89,7 @@ const Gallery: React.FC = () => {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           participantsList.push({
-            id: data.participantId || doc.id, // IMPORTANT
+            id: doc.id, // Use doc.id consistently
             photoUrl: data.photoUrl,
             location: data.location,
             choice: data.choice || '',
@@ -98,7 +98,9 @@ const Gallery: React.FC = () => {
           });
         });
 
-       setParticipants(participantsList);
+        console.log('Raw participants:', participantsList); // DEBUG
+        console.log('Self ID:', currentUserId); // DEBUG
+        setParticipants(participantsList);
       } catch (err) {
         console.error("Error fetching participants:", err);
       } finally {
@@ -261,11 +263,8 @@ const Gallery: React.FC = () => {
       </div>
     );
   }
-const safeParticipants = filteredParticipants.filter(
-  p => p.id !== currentUserId
-);
-
-const currentParticipant = safeParticipants[currentIndex + 1];
+// No need - already filtered in useEffect
+const currentParticipant = filteredParticipants[currentIndex];
 
   return (
     <div

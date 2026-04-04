@@ -94,6 +94,7 @@ const Lollipop: React.FC = () => {
 
       // Also save to event-specific subcollection
       const participantRef = await addDoc(collection(db, `events/${eventId}/participants`), participantData);
+      console.log('Created participant ID:', participantRef.id); // DEBUG
 
       // Persist complete profile to localStorage
       const profileKey = `linkupProfile_${eventId}`;
