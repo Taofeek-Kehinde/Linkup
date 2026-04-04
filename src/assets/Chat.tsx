@@ -94,7 +94,7 @@ const Chat: React.FC = () => {
     const chatId = `${eventId}_${userIds[0]}_${userIds[1]}`;
     
     const messagesRef = collection(db, `chats/${chatId}/messages`);
-    const q = query(messagesRef, orderBy("timestamp", "desc"), limit(50));
+    const q = query(messagesRef, orderBy("timestamp", "desc"), limit(3));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const messagesList: Message[] = [];
