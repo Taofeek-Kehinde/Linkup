@@ -98,10 +98,7 @@ const Gallery: React.FC = () => {
           });
         });
 
-        setParticipants(participantsList);
-        // Filter out self using reliable ID
-        const baseList = participantsList.filter(p => p.id !== currentUserId);
-        setFilteredParticipants(baseList);
+       setParticipants(participantsList);
       } catch (err) {
         console.error("Error fetching participants:", err);
       } finally {
@@ -264,11 +261,11 @@ const Gallery: React.FC = () => {
       </div>
     );
   }
+const safeParticipants = filteredParticipants.filter(
+  p => p.id !== currentUserId
+);
 
-  const currentParticipant =
-  filteredParticipants[currentIndex]?.id === currentUserId
-    ? filteredParticipants[currentIndex + 1]
-    : filteredParticipants[currentIndex];
+const currentParticipant = safeParticipants[currentIndex + 1];
 
   return (
     <div
