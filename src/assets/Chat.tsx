@@ -27,6 +27,17 @@ const Chat: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [participantPhoto, setParticipantPhoto] = useState("");
   const [participantLocation, setParticipantLocation] = useState("");
+  const [currentUserId, setCurrentUserId] = useState<string>("");
+
+  // Get current user ID
+  useEffect(() => {
+    let userId = sessionStorage.getItem('currentUserId');
+    if (!userId) {
+      userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      sessionStorage.setItem('currentUserId', userId);
+    }
+    setCurrentUserId(userId);
+  }, []);
 
   useEffect(() => {
     // Get participant info from location state
@@ -73,12 +84,17 @@ const Chat: React.FC = () => {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Fetch messages - Use consistent chatId that both users can access
   useEffect(() => {
-    if (!eventId || !participantId) return;
+    if (!eventId || !participantId || !currentUserId) return;
 
-    const chatId = [eventId, participantId].sort().join('_');
+    // Create a consistent chat ID that will be the same for both users
+    // Sort the two user IDs to ensure both get the same chatId
+    const userIds = [currentUserId, participantId].sort();
+    const chatId = `${eventId}_${userIds[0]}_${userIds[1]}`;
+    
     const messagesRef = collection(db, `chats/${chatId}/messages`);
-    const q = query(messagesRef, orderBy("timestamp", "desc"), limit(3));
+    const q = query(messagesRef, orderBy("timestamp", "desc"), limit(50));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const messagesList: Message[] = [];
@@ -97,21 +113,28 @@ const Chat: React.FC = () => {
     });
 
     return () => unsubscribe();
-  }, [eventId, participantId]);
+  }, [eventId, participantId, currentUserId]);
 
   const sendMessage = async () => {
     if (isExpired || timeLeft <= 0 || !newMessage.trim()) {
       alert("Chat session has expired!");
       return;
     }
+    if (!currentUserId) {
+      alert("Please refresh and try again");
+      return;
+    }
 
-    const chatId = [eventId, participantId].sort().join('_');
+    // Create consistent chat ID
+    const userIds = [currentUserId, participantId!].sort();
+    const chatId = `${eventId}_${userIds[0]}_${userIds[1]}`;
     const messagesRef = collection(db, `chats/${chatId}/messages`);
 
     try {
       await addDoc(messagesRef, {
         text: newMessage.trim(),
-        senderId: "currentUser",
+        senderId: currentUserId,
+        receiverId: participantId,
         timestamp: serverTimestamp(),
         read: false
       });
@@ -133,13 +156,15 @@ const Chat: React.FC = () => {
       reader.onloadend = async () => {
         const base64Image = reader.result as string;
         
-        const chatId = [eventId, participantId].sort().join('_');
+        const userIds = [currentUserId, participantId!].sort();
+        const chatId = `${eventId}_${userIds[0]}_${userIds[1]}`;
         const messagesRef = collection(db, `chats/${chatId}/messages`);
         
         await addDoc(messagesRef, {
           text: "📷 Photo",
           imageUrl: base64Image,
-          senderId: "currentUser",
+          senderId: currentUserId,
+          receiverId: participantId,
           timestamp: serverTimestamp()
         });
       };
@@ -156,6 +181,25 @@ const Chat: React.FC = () => {
   const takePhoto = () => {
     fileInputRef.current?.click();
   };
+
+  if (!currentUserId) {
+    return (
+      <div style={{
+        width: '100%',
+        maxWidth: '100vw',
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: '#f5f7fb',
+        fontFamily: 'system-ui, sans-serif'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -220,18 +264,17 @@ const Chat: React.FC = () => {
             TALKING STAGE
           </div>          
           <div 
-   onClick={() => navigate(`/all-chats/${eventId}`)}
-  style={{
-    fontSize: '14px',
-    fontWeight: '500',
-    color: '#1e4fa3',
-    padding: '8px 0',
-    cursor: 'pointer'
-  }}
->
-  LINKS
-</div>
-
+            onClick={() => navigate(`/all-chats/${eventId}`)}
+            style={{
+              fontSize: '14px',
+              fontWeight: '500',
+              color: '#1e4fa3',
+              padding: '8px 0',
+              cursor: 'pointer'
+            }}
+          >
+            LINKS
+          </div>
         </div>
         
         {/* Candy&Classy under it */}
@@ -250,7 +293,6 @@ const Chat: React.FC = () => {
             (Candy&Classy)
           </span>
         </div>
-
 
         {/* Timer */}
         <div style={{
@@ -359,7 +401,7 @@ const Chat: React.FC = () => {
                 key={message.id}
                 style={{
                   display: 'flex',
-                  justifyContent: message.senderId === 'currentUser' ? 'flex-end' : 'flex-start',
+                  justifyContent: message.senderId === currentUserId ? 'flex-end' : 'flex-start',
                   animation: 'slideIn 0.3s ease-out',
                   width: '100%'
                 }}
@@ -370,7 +412,7 @@ const Chat: React.FC = () => {
                   gap: '8px',
                   alignItems: 'flex-start'
                 }}>
-                  {message.senderId !== 'currentUser' && (
+                  {message.senderId !== currentUserId && (
                     <div style={{
                       width: '32px',
                       height: '32px',
@@ -391,10 +433,10 @@ const Chat: React.FC = () => {
                   )}
                   
                   <div style={{
-                    background: message.senderId === 'currentUser' ? '#1e4fa3' : 'white',
-                    color: message.senderId === 'currentUser' ? 'white' : '#333',
+                    background: message.senderId === currentUserId ? '#1e4fa3' : 'white',
+                    color: message.senderId === currentUserId ? 'white' : '#333',
                     padding: '10px 14px',
-                    borderRadius: message.senderId === 'currentUser' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                    borderRadius: message.senderId === currentUserId ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
                     boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
                     maxWidth: '100%',
                     wordWrap: 'break-word',
@@ -420,7 +462,7 @@ const Chat: React.FC = () => {
                     {message.text === "📷 Photo" && <span>📷 Photo</span>}
                   </div>
                   
-                  {message.senderId === 'currentUser' && (
+                  {message.senderId === currentUserId && (
                     <div style={{
                       width: '32px',
                       height: '32px',
@@ -447,7 +489,6 @@ const Chat: React.FC = () => {
                       )}
                     </div>
                   )}
-
                 </div>
               </div>
             ))}
