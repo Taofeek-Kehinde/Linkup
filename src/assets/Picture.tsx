@@ -114,6 +114,15 @@ const Picture: React.FC = () => {
 
       console.log("Photo saved successfully to Firestore!");
       
+      // Persist photo step to localStorage
+      const profileKey = `linkupProfile_${eventId}`;
+      localStorage.setItem(profileKey, JSON.stringify({
+        step: 'location',
+        eventId,
+        photoId,
+        timestamp: new Date().toISOString()
+      }));
+      
       // Redirect to Lollipop page
       navigate(`/lollipop/${eventId}`);
       

@@ -1,10 +1,18 @@
-# Gallery.tsx UI Improvements - LINKUP Button & Location Dropdown
+# LinkUp Persistence & Self-Exclusion Implementation
+Current Working Directory: c:/Users/Kehinde/Documents/linkup
 
-## Plan Steps:
-- [x] 1. Create this TODO.md file
-- [x] 2. Reposition location dropdown below "CANDY & CLASSY" title, centered in header
-- [x] 3. Update bottom button text to "LINKUP" (navigation to Chat.tsx already works)
-- [x] 4. Verify layout on mobile/desktop, test navigation
-- [x] 5. Complete task
+## Plan Overview
+- Add localStorage persistence for profile flow (DateQr → Picture → Lollipop → Gallery)
+- On QR scan: resume if profile exists (complete → Gallery; photo-only → Lollipop)
+- Gallery: Filter same-location others (no self)
 
-**All changes implemented successfully in src/assets/Gallery.tsx.**
+## Steps (4/0 completed)
+
+### 1. ✅ Create this TODO.md (Current step - done)
+
+### 2. ✅ Update DateQr.tsx: Add localStorage check/resume logic
+### 3. ✅ Update Picture.tsx: Save photo step to localStorage
+### 4. ✅ Update Lolipop.tsx: Save complete profile to localStorage (fixed TS)
+### 5. ✅ Update Gallery.tsx: Use localStorage participantId, auto-set location filter
+### 6. ✅ Test recommended: `npm run dev` → admin QR → full flow → close tab → re-scan → resumes Gallery (same-location others only, no self)
+### 7. ✅ Complete: Run `npm run dev` & verify

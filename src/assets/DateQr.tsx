@@ -29,15 +29,46 @@ const DateQr: React.FC = () => {
     return `${baseUrl}/picture/${id}`;
   };
 
-  // Auto-redirect root / to Picture if session eventId (QR scan), but show QR page for admin navigation
+  // Persistence: Check localStorage profile state on QR scan/root
   useEffect(() => {
+  const checkProfileState = async () => {
+    let targetEventId: string | undefined = eventId;
+    
+    // If no eventId in URL, try session/localStorage
+    if (!targetEventId) {
+      const sessionId = sessionStorage.getItem('currentEventId') || undefined;
+      const localProfiles = Object.keys(localStorage).filter(key => key.startsWith('linkupProfile_'));
+      const recentProfile = localProfiles[localProfiles.length - 1];
+      targetEventId = sessionId || (recentProfile ? recentProfile.split('_')[1] as string : undefined);
+    }
+    
+    if (targetEventId) {
+      const profileKey = `linkupProfile_${targetEventId}`;
+      const profile = localStorage.getItem(profileKey);
+      if (profile) {
+        const profileData = JSON.parse(profile);
+        if (profileData.step === 'complete') {
+          navigate(`/gallery/${targetEventId}`);
+          return;
+        } else if (profileData.step === 'location') {
+          navigate(`/lollipop/${targetEventId}`);
+          return;
+        }
+      }
+    }
+    
+    // Fallback: sessionStorage picture redirect for fresh
     if (!eventId) {
       const sessionId = sessionStorage.getItem('currentEventId');
       if (sessionId) {
         navigate(`/picture/${sessionId}`);
       }
     }
-  }, []);
+  };
+
+    
+    checkProfileState();
+  }, [eventId, navigate]);
 
   useEffect(() => {
     const fetchEventData = async () => {
@@ -68,8 +99,9 @@ const DateQr: React.FC = () => {
           const data = eventDoc.data();
           setEventName(data.eventName || "LINK UP Event");
           setLocations(data.locations || []);
-          // Store the eventId for future use
-          sessionStorage.setItem('currentEventId', id);
+        // Store eventId in both session & localStorage for persistence
+        sessionStorage.setItem('currentEventId', id);
+        localStorage.setItem('currentEventId', id);
         } else {
           const savedName = sessionStorage.getItem('currentEventName');
           const savedLocations = sessionStorage.getItem('currentEventLocations');

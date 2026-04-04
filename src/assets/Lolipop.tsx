@@ -93,8 +93,23 @@ const Lollipop: React.FC = () => {
       await addDoc(collection(db, "participants"), participantData);
 
       // Also save to event-specific subcollection
-      await addDoc(collection(db, `events/${eventId}/participants`), participantData);
+      const participantRef = await addDoc(collection(db, `events/${eventId}/participants`), participantData);
 
+      // Persist complete profile to localStorage
+      const profileKey = `linkupProfile_${eventId}`;
+      const existingProfile = localStorage.getItem(profileKey);
+      const profileDataObj = existingProfile ? JSON.parse(existingProfile) : {};
+      localStorage.setItem(profileKey, JSON.stringify({
+        ...profileDataObj,
+        step: 'complete',
+        participantId: participantRef.id,  // Use the new doc ID
+        location: selectedLocation,
+        eventId,
+        photoId: profileDataObj.photoId || null,
+        timestamp: new Date().toISOString()
+      }));
+
+      
       // Redirect to gallery page showing all participants
       navigate(`/gallery/${eventId}`);
 

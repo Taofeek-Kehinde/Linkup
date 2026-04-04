@@ -27,22 +27,35 @@ const Gallery: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [eventName, setEventName] = useState("");
   const [locations, setLocations] = useState<string[]>([]);
-  const [selectedLocation, setSelectedLocation] = useState<string>("all");
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string>("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const touchStartY = useRef<number>(0);
 
-  // Generate a unique ID for the current user session
+    // Get reliable selfId from localStorage profile (persistent) or sessionStorage fallback
   useEffect(() => {
-    let userId = sessionStorage.getItem('currentUserId');
-    if (!userId) {
-      userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      sessionStorage.setItem('currentUserId', userId);
+    const profileKey = `linkupProfile_${eventId}`;
+    const profile = localStorage.getItem(profileKey);
+    let selfId = null;
+    let myLocation = 'all';
+    
+    if (profile) {
+      const profileData = JSON.parse(profile);
+      selfId = profileData.participantId || null;
+      myLocation = profileData.location || 'all';
     }
-    setCurrentUserId(userId);
-  }, []);
+    
+    // Fallback to sessionStorage
+    if (!selfId) {
+      selfId = sessionStorage.getItem('currentUserId') || `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      sessionStorage.setItem('currentUserId', selfId);
+    }
+    
+    setCurrentUserId(selfId);
+    setSelectedLocation(myLocation);
+  }, [eventId]);
 
   useEffect(() => {
     const fetchParticipants = async () => {
@@ -86,9 +99,9 @@ const Gallery: React.FC = () => {
         });
 
         setParticipants(participantsList);
-        // Filter out the current user from the main list
-        const filteredList = participantsList.filter(p => p.id !== currentUserId);
-        setFilteredParticipants(filteredList);
+        // Filter out self using reliable ID
+        const baseList = participantsList.filter(p => p.id !== currentUserId);
+        setFilteredParticipants(baseList);
       } catch (err) {
         console.error("Error fetching participants:", err);
       } finally {
@@ -101,14 +114,15 @@ const Gallery: React.FC = () => {
     }
   }, [eventId, navigate, currentUserId]);
 
-  // Filter participants when location changes (excluding current user)
+  // Filter participants when location changes (exclude self, same-location focus)
   useEffect(() => {
     let baseList = participants.filter(p => p.id !== currentUserId);
     
-    if (selectedLocation === "all") {
+    const targetLocation = selectedLocation || 'all';
+    if (targetLocation === "all") {
       setFilteredParticipants(baseList);
     } else {
-      const filtered = baseList.filter(p => p.location === selectedLocation);
+      const filtered = baseList.filter(p => p.location === targetLocation);
       setFilteredParticipants(filtered);
     }
     setCurrentIndex(0);
