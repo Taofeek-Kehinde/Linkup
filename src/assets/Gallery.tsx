@@ -27,34 +27,46 @@ const Gallery: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [eventName, setEventName] = useState("");
   const [locations, setLocations] = useState<string[]>([]);
-  const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [selectedLocation, setSelectedLocation] = useState<string>("all");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [currentUserLocation, setCurrentUserLocation] = useState<string>("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const touchStartY = useRef<number>(0);
 
-    // Get reliable selfId from localStorage profile (persistent) or sessionStorage fallback
+  // Get current user ID from session storage
   useEffect(() => {
-    const profileKey = `linkupProfile_${eventId}`;
-    const profile = localStorage.getItem(profileKey);
-    let selfId = null;
-    let myLocation = 'all';
-    
-    if (profile) {
-      const profileData = JSON.parse(profile);
-      selfId = profileData.participantId || null;
-      myLocation = profileData.location || 'all';
+    let userId = sessionStorage.getItem('currentUserId');
+    if (!userId) {
+      userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      sessionStorage.setItem('currentUserId', userId);
     }
+    setCurrentUserId(userId);
     
-    // Fallback to sessionStorage
-    if (!selfId) {
-      selfId = sessionStorage.getItem('currentUserId') || `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      sessionStorage.setItem('currentUserId', selfId);
-    }
+    // Get current user's location from their participant data
+    const fetchCurrentUserLocation = async () => {
+      if (!eventId) return;
+      
+      try {
+        const participantsRef = collection(db, `events/${eventId}/participants`);
+        const q = query(participantsRef, orderBy("timestamp", "desc"));
+        const querySnapshot = await getDocs(q);
+        
+        for (const doc of querySnapshot.docs) {
+          const data = doc.data();
+          if (doc.id === userId) {
+            setCurrentUserLocation(data.location || "");
+            setSelectedLocation(data.location || "all");
+            break;
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching user location:", err);
+      }
+    };
     
-    setCurrentUserId(selfId);
-    setSelectedLocation(myLocation);
+    fetchCurrentUserLocation();
   }, [eventId]);
 
   useEffect(() => {
@@ -99,9 +111,6 @@ const Gallery: React.FC = () => {
         });
 
         setParticipants(participantsList);
-        // Filter out self using reliable ID
-        const baseList = participantsList.filter(p => p.id !== currentUserId);
-        setFilteredParticipants(baseList);
       } catch (err) {
         console.error("Error fetching participants:", err);
       } finally {
@@ -109,26 +118,26 @@ const Gallery: React.FC = () => {
       }
     };
 
-    if (currentUserId) {
-      fetchParticipants();
-    }
-  }, [eventId, navigate, currentUserId]);
+    fetchParticipants();
+  }, [eventId, navigate]);
 
-  // Filter participants when location changes (exclude self, same-location focus)
+  // Filter participants - EXCLUDE CURRENT USER and filter by location
   useEffect(() => {
+    // First, filter out the current user completely
     let baseList = participants.filter(p => p.id !== currentUserId);
     
-    const targetLocation = selectedLocation || 'all';
-    if (targetLocation === "all") {
+    // Then apply location filter
+    if (selectedLocation === "all") {
       setFilteredParticipants(baseList);
     } else {
-      const filtered = baseList.filter(p => p.location === targetLocation);
+      const filtered = baseList.filter(p => p.location === selectedLocation);
       setFilteredParticipants(filtered);
     }
     setCurrentIndex(0);
   }, [selectedLocation, participants, currentUserId]);
 
   const handleChat = (participant: Participant) => {
+    // Double-check it's not the current user
     if (participant.id === currentUserId) {
       alert("You cannot chat with yourself!");
       return;
@@ -237,11 +246,11 @@ const Gallery: React.FC = () => {
             textAlign: 'center'
           }}>
             <FaCamera size={60} color="#bdc3c7" />
-            <h3 style={{ marginTop: '20px', color: '#333' }}>No participants found</h3>
+            <h3 style={{ marginTop: '20px', color: '#333' }}>No other participants found</h3>
             <p style={{ color: '#7f8c8d', marginTop: '10px' }}>
-              {selectedLocation === 'all' 
-                ? 'No one has linked up yet. Be the first!' 
-                : `No participants found in ${selectedLocation}`}
+              {selectedLocation !== 'all' 
+                ? `No participants found in ${selectedLocation}` 
+                : 'No other participants have joined yet'}
             </p>
             <button
               onClick={() => navigate(`/lollipop/${eventId}`)}
@@ -257,7 +266,7 @@ const Gallery: React.FC = () => {
                 fontWeight: '600'
               }}
             >
-              Join the LINKUP
+              Back to Profile
             </button>
           </div>
         </div>
@@ -287,7 +296,7 @@ const Gallery: React.FC = () => {
       onTouchEnd={handleTouchEnd}
       onWheel={handleWheel}
     >
-      {/* Full Screen Background Image - but not covering button area */}
+      {/* Full Screen Background Image */}
       <div
         style={{
           position: 'absolute',
@@ -324,7 +333,7 @@ const Gallery: React.FC = () => {
           flexShrink: 0
         }}
       >
-<div
+        <div
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -348,7 +357,7 @@ const Gallery: React.FC = () => {
             </h1>
           </div>
 
-          {/* Location Filter - Now centered below title */}
+          {/* Location Filter */}
           <div style={{ position: 'relative' }}>
             <div
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -458,7 +467,7 @@ const Gallery: React.FC = () => {
       {/* Spacer to push content down */}
       <div style={{ flex: 1 }} />
 
-      {/* Bottom Section with LINKUP Button - ALWAYS VISIBLE */}
+      {/* Bottom Section with LINKUP Button */}
       <div
         style={{
           position: 'relative',
@@ -494,7 +503,7 @@ const Gallery: React.FC = () => {
           </span>
         </div>
 
-        {/* LINKUP Button - Navigates to Chat */}
+        {/* LINKUP Button */}
         <button
           onClick={() => handleChat(currentParticipant)}
           style={{
@@ -523,45 +532,9 @@ const Gallery: React.FC = () => {
           }}
         >
           <FaComment style={{ marginRight: '10px', verticalAlign: 'middle' }} />
-          LINKUP
+          LINKUPwithME
         </button>
       </div>
-
-      {/* LINKUP Overlay Button - On the Picture */}
-      <button
-        onClick={() => handleChat(currentParticipant)}
-        style={{
-          position: 'absolute',
-          bottom: '140px',
-          right: '20px',
-          background: 'rgba(30, 79, 163, 0.9)',
-          color: 'white',
-          border: 'none',
-          padding: '12px 20px',
-          borderRadius: '30px',
-          fontSize: '16px',
-          fontWeight: '600',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-          zIndex: 20,
-          backdropFilter: 'blur(10px)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'rgba(22, 61, 122, 0.95)';
-          e.currentTarget.style.transform = 'scale(1.05)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'rgba(30, 79, 163, 0.9)';
-          e.currentTarget.style.transform = 'scale(1)';
-        }}
-      >
-        <FaComment style={{ fontSize: '14px' }} />
-        LINKUP
-      </button>
 
       {/* Page Counter */}
       <div
@@ -582,23 +555,25 @@ const Gallery: React.FC = () => {
         {currentIndex + 1} / {filteredParticipants.length}
       </div>
 
-      {/* Swipe Instruction */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          color: 'rgba(255,255,255,0.4)',
-          fontSize: '13px',
-          textAlign: 'center',
-          pointerEvents: 'none',
-          zIndex: 10,
-          whiteSpace: 'nowrap'
-        }}
-      >
-        ↑ Swipe up/down to browse ↓
-      </div>
+      {/* Swipe Instruction - Only show if more than 1 participant */}
+      {filteredParticipants.length > 1 && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'rgba(255,255,255,0.4)',
+            fontSize: '13px',
+            textAlign: 'center',
+            pointerEvents: 'none',
+            zIndex: 10,
+            whiteSpace: 'nowrap'
+          }}
+        >
+          ↑ Swipe up/down to browse ↓
+        </div>
+      )}
 
       <style>{`
         @keyframes dropdownFadeIn {
